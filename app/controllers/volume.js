@@ -3,6 +3,28 @@ var openstack = require('../../config/openstack-utils');
 module.exports = function(app) {
     var controller = {};
 
+    controller.getVolumeTypes = function(req, res) {
+
+        openstack.blockstorage.getVolumeTypes(function(err, volumes) {
+            if (err) {
+                res.status(err.statusCode).json(err);
+                return;
+            }
+            res.status(200).json(volumes);
+        });
+    }
+
+    controller.getVolumeType = function(req, res) {
+
+        openstack.blockstorage.getVolumeType(req.params.id, function(err, volume) {
+            if (err) {
+                res.status(err.statusCode).json(err);
+                return;
+            }
+            res.status(200).json(volume);
+        });
+    }
+
     controller.getVolumes = function(req, res) {
 
         openstack.blockstorage.getVolumes(function(err, volumes) {
