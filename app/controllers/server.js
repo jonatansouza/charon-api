@@ -6,7 +6,7 @@ module.exports = function(app) {
     controller.createServer = function(req, res) {
 
         var options = {
-            name: req.body.serverName,
+            name: req.body.name,
             flavor: req.body.flavor,
             image: req.body.image
         };
