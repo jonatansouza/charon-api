@@ -14,8 +14,9 @@ module.exports = function(app) {
         console.log(options);
         openstack.compute.createServer(options, function(err, server) {
             if (err) {
-                res.status(err.statusCode).json(err);
-                return;
+                var status = err.statusCode || 500;
+                res.status(status).json(err);
+                return
             }
             res.status(200).json(server);
         });
@@ -24,7 +25,8 @@ module.exports = function(app) {
     controller.getServers = function(req, res) {
         openstack.compute.getServers(function(err, servers) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                console.log(err);
+                res.status(err.statusCode || 500).json(err);
                 return
             }
             res.status(200).json(servers);
@@ -34,7 +36,7 @@ module.exports = function(app) {
     controller.getServerById = function(req, res) {
         openstack.compute.getServer(req.params.id, function(err, server) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
                 return
             }
             res.status(200).json(server);
@@ -44,7 +46,7 @@ module.exports = function(app) {
     controller.destroyServer = function(req, res) {
         openstack.compute.destroyServer(req.params.id, function(err, server) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
                 return
             }
             res.status(200).json(server);
@@ -54,7 +56,8 @@ module.exports = function(app) {
     controller.rebootServer = function(req, res) {
         openstack.compute.rebootServer(req.params.id, function(err, server) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
+                return
             }
             res.status(200).json(server);
         });
@@ -63,7 +66,8 @@ module.exports = function(app) {
     controller.volumeAttachments = function(req, res) {
         openstack.compute.getVolumeAttachments(req.params.id, function(err, volumes) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
+                return
             }
             res.status(200).json(volumes);
         });
@@ -75,7 +79,8 @@ module.exports = function(app) {
 
         openstack.compute.attachVolume(serverId, volumeId, function(err, volume) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
+                return
             }
             res.status(200).json(volume);
         });
@@ -87,7 +92,8 @@ module.exports = function(app) {
 
         openstack.compute.detachVolume(serverId, volumeId, function(err) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
+                return
             }
             res.status(200);
         });
@@ -96,7 +102,7 @@ module.exports = function(app) {
     controller.version = function(req, res) {
         openstack.compute.getVersion(function(err, version) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
                 return
             }
             res.status(200).json(version);
@@ -107,7 +113,7 @@ module.exports = function(app) {
     controller.limits = function(req, res) {
         openstack.compute.getLimits(function(err, limits) {
             if (err) {
-                res.status(err.statusCode).json(err);
+                res.status(err.statusCode || 500).json(err);
                 return
             }
             res.status(200).json(limits);

@@ -6,8 +6,8 @@ module.exports = function(app) {
     controller.getFlavors = function(req, res) {
         openstack.compute.getFlavors(function(err, flavors) {
             if (err) {
-                res.status(500).json(err);
-                return
+              res.status(err.statusCode || 500).json(err);
+              return
             }
             res.status(200).json(flavors);
         });
@@ -16,7 +16,7 @@ module.exports = function(app) {
     controller.getFlavorById = function(req, res){
       openstack.compute.getFlavor(req.params.id, function (err, flavor) {
         if(err){
-          res.status(500).json(err);
+          res.status(err.statusCode || 500).json(err);
           return
         }
           res.status(200).json(flavor);

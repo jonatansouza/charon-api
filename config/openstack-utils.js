@@ -1,26 +1,25 @@
 var openstack = require('./openstack-config');
 
 exports.storage = require('pkgcloud').storage.createClient({
-  provider: 'openstack',
-  username: openstack.storage.username,
-  password: openstack.storage.password,
-  authUrl: openstack.storage.authUrl
+    provider: 'openstack',
+    username: openstack.params.username,
+    password: openstack.params.password,
+    region: openstack.params.region,
+    authUrl: openstack.params.authUrl
 });
 
 exports.compute = require('pkgcloud').compute.createClient({
     provider: 'openstack',
-    username: openstack.compute.username,
-    password: openstack.compute.password,
-    tenantId: openstack.compute.tenantId,
-    region: openstack.compute.region,
-    authUrl: openstack.compute.authUrl
+    username: openstack.params.username,
+    password: openstack.params.password,
+    region: openstack.params.region,
+    authUrl: openstack.params.authUrl
 });
 
 exports.blockstorage = require('pkgcloud').blockstorage.createClient({
     provider: 'openstack',
-    username: openstack.compute.username,
-    password: openstack.compute.password,
-    tenantId: openstack.compute.tenantId,
-    region: openstack.compute.region,
-    authUrl: openstack.compute.authUrl
+    username: openstack.params.username,
+    password: openstack.params.password,
+    region: openstack.params.region,
+    authUrl: openstack.params.authUrl
 });
