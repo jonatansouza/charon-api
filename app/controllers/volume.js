@@ -49,9 +49,9 @@ module.exports = function(app) {
     controller.createVolume = function(req, res) {
         var options = {
             name: req.body.name, // required
-            description: req.body.description, // required
-            size: req.body.size || 100, // 100-1000 gb
-            volumeType: req.body.volumeType || '', // optional, defaults to spindles
+            description: req.body.description || 'default',// required
+            size: req.body.size || 5, // 100-1000 gb
+            volumeType: req.body.volumeType || 'lvmdriver-1', // optional, defaults to spindles
             snapshotId: req.body.snapshotId || '' // optional, the snapshotId to use when creating the volume
         }
         console.log(options);
@@ -79,11 +79,13 @@ module.exports = function(app) {
     controller.updateVolume = function(req, res) {
         var volume = {
             id: req.body.id,
-            name: req.body.name,
-            description: req.body.description
+            name: req.body.name || 'default',
+            description: req.body.description || 'default',
+
         }
 
         console.log(volume);
+
         openstack.blockstorage.updateVolume(volume, function(err, volume) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);

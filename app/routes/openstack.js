@@ -28,7 +28,7 @@ module.exports = function(app) {
 
     //server volume attach
     app.get('/api/openstack/servers/volumes/:id', serverController.volumeAttachments);
-    app.put('/api/openstack/servers/volumes', serverController.attachVolume);
+    app.post('/api/openstack/servers/volumes', serverController.attachVolume);
     app.delete('/api/openstack/servers/volumes', serverController.detachVolume);
 
     //volume cinder
