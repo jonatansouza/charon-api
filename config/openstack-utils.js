@@ -1,6 +1,7 @@
-var openstack = require('./openstack-config');
+var openstack = require('./openstack-config')
+,   pkgcloud = require('pkgcloud');
 
-exports.storage = require('pkgcloud').storage.createClient({
+exports.storage = pkgcloud.storage.createClient({
     provider: 'openstack',
     username: openstack.params.username,
     password: openstack.params.password,
@@ -8,7 +9,7 @@ exports.storage = require('pkgcloud').storage.createClient({
     authUrl: openstack.params.authUrl
 });
 
-exports.compute = require('pkgcloud').compute.createClient({
+exports.compute = pkgcloud.compute.createClient({
     provider: 'openstack',
     username: openstack.params.username,
     password: openstack.params.password,
@@ -16,7 +17,15 @@ exports.compute = require('pkgcloud').compute.createClient({
     authUrl: openstack.params.authUrl
 });
 
-exports.blockstorage = require('pkgcloud').blockstorage.createClient({
+exports.blockstorage = pkgcloud.blockstorage.createClient({
+    provider: 'openstack',
+    username: openstack.params.username,
+    password: openstack.params.password,
+    region: openstack.params.region,
+    authUrl: openstack.params.authUrl
+});
+
+exports.network = pkgcloud.network.createClient({
     provider: 'openstack',
     username: openstack.params.username,
     password: openstack.params.password,

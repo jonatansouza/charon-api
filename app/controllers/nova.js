@@ -109,6 +109,27 @@ module.exports = function(app) {
         });
     }
 
+    controller.getFlavors = function(req, res) {
+        openstack.compute.getFlavors(function(err, flavors) {
+            if (err) {
+              res.status(err.statusCode || 500).json(err);
+              return
+            }
+            res.status(200).json(flavors);
+        });
+    };
+
+    controller.getFlavorById = function(req, res){
+      openstack.compute.getFlavor(req.params.id, function (err, flavor) {
+        if(err){
+          res.status(err.statusCode || 500).json(err);
+          return
+        }
+          res.status(200).json(flavor);
+
+      });
+    }
+
 
     controller.limits = function(req, res) {
         openstack.compute.getLimits(function(err, limits) {
