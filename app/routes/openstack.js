@@ -28,8 +28,8 @@ module.exports = function(app) {
 
     //server volume attach
     app.get('/api/openstack/servers/volumes/:id', novaController.volumeAttachments);
-    app.post('/api/openstack/servers/volumes', novaController.attachVolume);
-    app.delete('/api/openstack/servers/volumes', novaController.detachVolume);
+    app.post('/api/openstack/servers/volumes/attach', novaController.attachVolume);
+    app.post('/api/openstack/servers/volumes/detach', novaController.detachVolume);
 
     //volume cinder
     //volume info
@@ -45,10 +45,10 @@ module.exports = function(app) {
     app.delete('/api/openstack/volumes/:id', cinderController.deleteVolume);
 
     //volume snapshots
-    app.get('/api/openstack/snapshots', cinderController.getSnapshots);
-    app.post('/api/openstack/snapshots', cinderController.createSnapshot);
+    app.get('/api/openstack/volumes/snapshots', cinderController.getSnapshots);
+    app.post('/api/openstack/volumes/snapshots', cinderController.createSnapshot);
 
-    app.get('/api/openstack/snapshots/:id', cinderController.getSnapshotById);
+    app.get('/api/openstack/volumes/snapshots/:id', cinderController.getSnapshotById);
 
     //network neutron
     app.get('/api/openstack/networks', neutronController.getNetworks);

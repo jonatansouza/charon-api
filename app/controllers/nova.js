@@ -74,8 +74,8 @@ module.exports = function(app) {
     }
 
     controller.attachVolume = function(req, res) {
-        serverId = req.body.serverId;
-        volumeId = req.body.volumeId;
+        serverId = req.body.server;
+        volumeId = req.body.volume;
 
         openstack.compute.attachVolume(serverId, volumeId, function(err, volume) {
             if (err) {
@@ -87,8 +87,8 @@ module.exports = function(app) {
     }
 
     controller.detachVolume = function(req, res) {
-        serverId = req.body.serverId;
-        volumeId = req.body.volumeId;
+        serverId = req.body.server;
+        volumeId = req.body.volume;
 
         openstack.compute.detachVolume(serverId, volumeId, function(err) {
             if (err) {
