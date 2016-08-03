@@ -1,0 +1,8 @@
+{
+    "provider": "openstack",
+    "keystoneAuthVersion": "v2",
+    "username": "charon",
+    "password": "password",
+    "region": "RegionOne",
+    "authUrl": "http://146.134.235.249:5000"
+}
