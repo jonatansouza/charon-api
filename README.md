@@ -4,6 +4,22 @@
 
 Charon is a Middleware that provide a openstack services by http requests
 
+##Initial configuration
+
+Edit the file init.json with parameters:
+
+```json
+{
+    "provider": "openstack",
+    "keystoneAuthVersion": "my_version",
+    "username": "my_username",
+    "password": "my_password",
+    "region": "RegionOne",
+    "authUrl": "my_auth_url"
+}
+
+```
+
 ##End Poinsts
 
 ###General info
