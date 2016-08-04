@@ -54,6 +54,8 @@ GET `/api/openstack/servers/:id`
 
 PUT `/api/openstack/servers/:id`
 
+DELETE `/api/openstack/servers/:id`
+
 
 ### Volumes
 

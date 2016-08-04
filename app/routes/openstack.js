@@ -26,6 +26,8 @@ module.exports = function(app) {
     app.get('/api/openstack/servers/:id', novaController.getServerById);
     app.put('/api/openstack/servers/:id', novaController.rebootServer);
 
+    app.delete('/api/openstack/servers/:id', novaController.destroyServer);
+
     //server volume attach
     app.get('/api/openstack/servers/volumes/:id', novaController.volumeAttachments);
     app.post('/api/openstack/servers/volumes/attach', novaController.attachVolume);
