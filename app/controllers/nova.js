@@ -79,6 +79,12 @@ module.exports = function(app) {
 
         openstack.compute.attachVolume(serverId, volumeId, function(err, volume) {
             if (err) {
+                if (err.statusCode == 202 || err.statusCode == 204) {
+                    res.status(200).json({
+                        "message": "volume attached"
+                    });
+                    return
+                }
                 res.status(err.statusCode || 500).json(err);
                 return
             }
@@ -92,6 +98,12 @@ module.exports = function(app) {
 
         openstack.compute.detachVolume(serverId, volumeId, function(err) {
             if (err) {
+                if (err.statusCode == 202 || err.statusCode == 204) {
+                    res.status(200).json({
+                        "message": "volume detached"
+                    });
+                    return
+                }
                 res.status(err.statusCode || 500).json(err);
                 return
             }
@@ -112,22 +124,22 @@ module.exports = function(app) {
     controller.getFlavors = function(req, res) {
         openstack.compute.getFlavors(function(err, flavors) {
             if (err) {
-              res.status(err.statusCode || 500).json(err);
-              return
+                res.status(err.statusCode || 500).json(err);
+                return
             }
             res.status(200).json(flavors);
         });
     };
 
-    controller.getFlavorById = function(req, res){
-      openstack.compute.getFlavor(req.params.id, function (err, flavor) {
-        if(err){
-          res.status(err.statusCode || 500).json(err);
-          return
-        }
-          res.status(200).json(flavor);
+    controller.getFlavorById = function(req, res) {
+        openstack.compute.getFlavor(req.params.id, function(err, flavor) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(flavor);
 
-      });
+        });
     }
 
 
