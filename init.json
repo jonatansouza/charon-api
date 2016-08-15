@@ -1,8 +1,8 @@
 {
     "provider": "openstack",
     "keystoneAuthVersion": "v2",
-    "username": "charon",
-    "password": "password",
+    "username": "facebook1740552386215933",
+    "password": "thk9iFEXCeUGxNG9",
     "region": "RegionOne",
-    "authUrl": "http://146.134.235.249:5000"
+    "authUrl": "http://8.43.86.2:5000"
 }

@@ -52,7 +52,38 @@ module.exports = function(app) {
 
     app.get('/api/openstack/volumes/snapshots/:id', cinderController.getSnapshotById);
 
-    //network neutron
+    //NETWORK NEUTRON
+    //networs
     app.get('/api/openstack/networks', neutronController.getNetworks);
+    app.get('/api/openstack/networks/:id', neutronController.getNetwork);
+    app.post('/api/openstack/networks', neutronController.createNetwork);
+    app.put('/api/openstack/networks', neutronController.updateNetwork);
+    app.delete('/api/openstack/networks/:id', neutronController.destroyNetwork);
+
+    //subnets
+    app.get('/api/openstack/networks/subnets', neutronController.getSubnets);
+    app.get('/api/openstack/networks/subnets/:id', neutronController.getSubnet);
+    app.post('/api/openstack/networks/subnets', neutronController.createSubnet);
+    app.put('/api/openstack/networks/subnets', neutronController.updateSubnet);
+    app.delete('/api/openstack/networks/subnets/:id', neutronController.destroySubnet);
+
+    //ports
+    app.get('/api/openstack/networks/ports', neutronController.getPorts);
+    app.get('/api/openstack/networks/ports/:id', neutronController.getPort);
+    app.post('/api/openstack/networks/ports', neutronController.createPort);
+    app.put('/api/openstack/networks/ports', neutronController.updatePort);
+    app.delete('/api/openstack/networks/ports/:id', neutronController.destroyPort);
+
+    //securityGroup
+    app.get('/api/openstack/networks/groups', neutronController.getSecurityGroups);
+    app.get('/api/openstack/networks/groups/:id', neutronController.getSecurityGroup);
+    app.post('/api/openstack/networks/groups', neutronController.createSecurityGroup);
+    app.delete('/api/openstack/networks/groups/:id', neutronController.destroySecurityGroup);
+
+    //securityGroupRules
+    app.get('/api/openstack/networks/groups/rules', neutronController.getSecurityGroupRules);
+    app.get('/api/openstack/networks/groups/rules/:id', neutronController.getSecurityGroupRule);
+    app.post('/api/openstack/networks/groups/rules', neutronController.createSecurityGroupRule);
+    app.delete('/api/openstack/networks/groups/rules/:id', neutronController.destroySecurityGroupRule);
 
 };
