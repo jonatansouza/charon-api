@@ -74,6 +74,7 @@ GET `/api/openstack/volumes/:id`
 
 DELETE `/api/openstack/volumes/:id`
 
+#### Snapshots
 
 GET `/api/openstack/volumes/snapshots`
 
@@ -92,32 +93,54 @@ POST `/api/openstack/servers/volumes/detach`
 ### Network
 
 GET `/api/openstack/networks`
+
 GET `/api/openstack/networks/:id`
+
 DELETE `/api/openstack/networks/:id`
+
 POST `/api/openstack/networks`
+
 PUT `/api/openstack/networks`
 
 ####Subnets
+
 GET `/api/openstack/networks/subnets`
+
 GET `/api/openstack/networks/subnets/:id`
+
 POST `/api/openstack/networks/subnets`
+
 PUT `/api/openstack/networks/subnets`
+
 DELETE `/api/openstack/networks/subnets/:id`
 
 ####Ports
+
 GET `/api/openstack/networks/ports`
+
 GET `/api/openstack/networks/ports/:id`
+
 POST `/api/openstack/networks/ports`
+
 PUT `/api/openstack/networks/ports`
+
 DELETE `/api/openstack/networks/ports/:id`
 
 ####SecurityGroup
+
 GET `/api/openstack/networks/groups`
+
 GET `/api/openstack/networks/groups/:id`
+
 POST `/api/openstack/networks/groups`
+
 DELETE `/api/openstack/networks/groups/:id`
 
+
 GET `/api/openstack/networks/groups/rules`
+
 GET `/api/openstack/networks/groups/rules/:id`
+
 POST `/api/openstack/networks/groups/rules`
+
 DELETE `/api/openstack/networks/groups/rules/:id`
