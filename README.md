@@ -1,10 +1,10 @@
 # Charon
 
-##Overview
+## Overview
 
 Charon is a Middleware that provide a openstack services by http requests
 
-##Initial configuration
+## Initial configuration
 
 Edit the file init.json with parameters:
 
@@ -17,18 +17,17 @@ Edit the file init.json with parameters:
     "region": "RegionOne",
     "authUrl": "my_auth_url"
 }
-
 ```
 
-##End Poinsts
+## End Poinsts
 
-###General info
+### General info
 
-GET  `/api/openstack/version`
+GET `/api/openstack/version`
 
-GET  `/api/openstack/limits`
+GET `/api/openstack/limits`
 
-###SSH keys
+### SSH keys
 
 GET `/api/openstack/keys`
 
@@ -41,7 +40,7 @@ POST `/api/openstack/keys`
 }
 ```
 
-###Groups
+### Groups
 
 GET `/api/openstack/groups`
 
@@ -54,13 +53,25 @@ POST `/api/openstack/groups`
 }
 ```
 
-###Flavors
+POST `/api/openstack/groups/rules`
 
-GET  `/api/openstack/flavors`
+```json
+{
+  "groupId": "group.id",
+  "ipProtocol": "TCP",
+  "fromPort": 80,
+  "toPort": 80
 
-GET  `/api/openstack/flavors/:id`
+}
+```
 
-###image
+### Flavors
+
+GET `/api/openstack/flavors`
+
+GET `/api/openstack/flavors/:id`
+
+### image
 
 GET `/api/openstack/images`
 
@@ -70,7 +81,7 @@ GET `/api/openstack/images/:id`
 
 DELETE (`/api/openstack/images/:id`
 
-###Instances
+### Instances
 
 GET `/api/openstack/servers`
 
@@ -82,13 +93,11 @@ PUT `/api/openstack/servers/:id`
 
 DELETE `/api/openstack/servers/:id`
 
-
 ### Volumes
 
 GET `/api/openstack/volumes/types`
 
 GET `/api/openstack/volumes/types/:id`
-
 
 GET `/api/openstack/volumes`
 
@@ -128,7 +137,11 @@ POST `/api/openstack/networks`
 
 PUT `/api/openstack/networks`
 
-####Subnets
+####Floating IPS
+
+GET `/api/openstack/networks/FloatingIps`
+
+#### Subnets
 
 GET `/api/openstack/networks/subnets`
 
@@ -140,7 +153,7 @@ PUT `/api/openstack/networks/subnets`
 
 DELETE `/api/openstack/networks/subnets/:id`
 
-####Ports
+#### Ports
 
 GET `/api/openstack/networks/ports`
 
@@ -151,22 +164,3 @@ POST `/api/openstack/networks/ports`
 PUT `/api/openstack/networks/ports`
 
 DELETE `/api/openstack/networks/ports/:id`
-
-####SecurityGroup
-
-GET `/api/openstack/networks/groups`
-
-GET `/api/openstack/networks/groups/:id`
-
-POST `/api/openstack/networks/groups`
-
-DELETE `/api/openstack/networks/groups/:id`
-
-
-GET `/api/openstack/networks/groups/rules`
-
-GET `/api/openstack/networks/groups/rules/:id`
-
-POST `/api/openstack/networks/groups/rules`
-
-DELETE `/api/openstack/networks/groups/rules/:id`

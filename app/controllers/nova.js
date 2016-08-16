@@ -174,14 +174,14 @@ module.exports = function(app) {
         });
     };
 
-    controller.getGroups = function(req, res){
-      openstack.compute.listGroups(function(err, groups) {
-          if (err) {
-              res.status(err.statusCode || 500).json(err);
-              return
-          }
-          res.status(200).json(groups);
-      });
+    controller.getGroups = function(req, res) {
+        openstack.compute.listGroups(function(err, groups) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(groups);
+        });
     };
 
     controller.addGroup = function(req, res) {
@@ -195,6 +195,35 @@ module.exports = function(app) {
         });
     };
 
+    controller.addRule = function(req, res) {
+        var options = req.body;
+        openstack.compute.addRule(options, function(err, rule) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(rule);
+        });
+    };
+
+    controller.getFloatingIps = function(req, res) {
+        openstack.compute.getFloatingIps(function(err, ips) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(ips);
+        });
+    };
+    controller.allocateNewFloatingIp = function(req, res) {
+        openstack.compute.allocateNewFloatingIp(function(err, ip) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(ip);
+        });
+    }
     return controller;
 
 }

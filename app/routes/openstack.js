@@ -1,3 +1,10 @@
+/**
+TODO
+  FIXED correct place to put securityGroup and securityGroupRules
+TODO
+*/
+
+
 module.exports = function(app) {
     var novaController = app.controllers.nova,
         glanceController = app.controllers.glance,
@@ -15,6 +22,7 @@ module.exports = function(app) {
     //Groups
     app.get('/api/openstack/groups', novaController.getGroups);
     app.post('/api/openstack/groups', novaController.addGroup);
+    app.post('/api/openstack/groups/rules', novaController.addRule);
 
     //flavor
     app.get('/api/openstack/flavors', novaController.getFlavors);
@@ -69,22 +77,28 @@ module.exports = function(app) {
     app.delete('/api/openstack/networks/:id', neutronController.destroyNetwork);
 
     //subnets
-    app.get('/api/openstack/networks/subnets', neutronController.getSubnets);
-    app.get('/api/openstack/networks/subnets/:id', neutronController.getSubnet);
-    app.post('/api/openstack/networks/subnets', neutronController.createSubnet);
-    app.put('/api/openstack/networks/subnets', neutronController.updateSubnet);
-    app.delete('/api/openstack/networks/subnets/:id', neutronController.destroySubnet);
+    app.get('/api/openstack/subnets', neutronController.getSubnets);
+    app.get('/api/openstack/subnets/:id', neutronController.getSubnet);
+    app.post('/api/openstack/subnets', neutronController.createSubnet);
+    app.put('/api/openstack/subnets', neutronController.updateSubnet);
+    app.delete('/api/openstack/subnets/:id', neutronController.destroySubnet);
 
     //ports
-    app.get('/api/openstack/networks/ports', neutronController.getPorts);
-    app.get('/api/openstack/networks/ports/:id', neutronController.getPort);
-    app.post('/api/openstack/networks/ports', neutronController.createPort);
-    app.put('/api/openstack/networks/ports', neutronController.updatePort);
-    app.delete('/api/openstack/networks/ports/:id', neutronController.destroyPort);
+    app.get('/api/openstack/ports', neutronController.getPorts);
+    app.get('/api/openstack/ports/:id', neutronController.getPort);
+    app.post('/api/openstack/ports', neutronController.createPort);
+    app.put('/api/openstack/ports', neutronController.updatePort);
+    app.delete('/api/openstack/ports/:id', neutronController.destroyPort);
+
+    //ips
+    app.get('/api/openstack/ips', novaController.getFloatingIps);
+    app.post('/api/openstack/ips', novaController.allocateNewFloatingIp);
 
     //securityGroup
-    app.get('/api/openstack/networks/groups', neutronController.getSecurityGroups);
+
+    /*app.get('/api/openstack/networks/groups', neutronController.getSecurityGroups);
     app.get('/api/openstack/networks/groups/:id', neutronController.getSecurityGroup);
+
     app.post('/api/openstack/networks/groups', neutronController.createSecurityGroup);
     app.delete('/api/openstack/networks/groups/:id', neutronController.destroySecurityGroup);
 
@@ -93,5 +107,5 @@ module.exports = function(app) {
     app.get('/api/openstack/networks/groups/rules/:id', neutronController.getSecurityGroupRule);
     app.post('/api/openstack/networks/groups/rules', neutronController.createSecurityGroupRule);
     app.delete('/api/openstack/networks/groups/rules/:id', neutronController.destroySecurityGroupRule);
-
+    */
 };
