@@ -52,14 +52,14 @@ module.exports = function(app) {
     app.delete('/api/openstack/servers/:id', novaController.destroyServer);
 
     //server volume attach
-    app.get('/api/openstack/servers/volumes/:id', novaController.volumeAttachments);
-    app.post('/api/openstack/servers/volumes/attach', novaController.attachVolume);
-    app.post('/api/openstack/servers/volumes/detach', novaController.detachVolume);
+    app.get('/api/openstack/attachments', novaController.volumeAttachments);
+    app.post('/api/openstack/attach', novaController.attachVolume);
+    app.post('/api/openstack/detach', novaController.detachVolume);
 
     //volume cinder
     //volume info
-    app.get('/api/openstack/volumes/types', cinderController.getVolumeTypes);
-    app.get('/api/openstack/volumes/types/:id', cinderController.getVolumeType);
+    app.get('/api/openstack/types', cinderController.getVolumeTypes);
+    app.get('/api/openstack/types/:id', cinderController.getVolumeType);
 
     //volume
     app.get('/api/openstack/volumes', cinderController.getVolumes);
@@ -70,8 +70,8 @@ module.exports = function(app) {
     app.delete('/api/openstack/volumes/:id', cinderController.deleteVolume);
 
     //volume snapshots
-    app.get('/api/openstack/volumes/snapshots', cinderController.getSnapshots);
-    app.post('/api/openstack/volumes/snapshots', cinderController.createSnapshot);
+    app.get('/api/openstack/snapshots', cinderController.getSnapshots);
+    app.post('/api/openstack/snapshots', cinderController.createSnapshot);
 
     app.get('/api/openstack/volumes/snapshots/:id', cinderController.getSnapshotById);
 

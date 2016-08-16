@@ -1,4 +1,4 @@
-# Charon
+  # Charon
 
 ## Overview
 
@@ -44,8 +44,6 @@ POST `/api/openstack/keys`
 
 GET `/api/openstack/groups`
 
-GET `/api/openstack/groups/:id`
-
 POST `/api/openstack/groups`
 
 ```json
@@ -55,15 +53,7 @@ POST `/api/openstack/groups`
 }
 ```
 
-DELETE `/api/openstack/groups/:id`
-
-GET `/api/openstack/rules`
-
-GET `/api/openstack/rules/:id`
-
-DELETE `/api/openstack/rules/:id`
-
-POST `/api/openstack/rules`
+POST `/api/openstack/groups/rules`
 
 ```json
 {
@@ -87,6 +77,13 @@ GET `/api/openstack/images`
 
 POST `/api/openstack/images`
 
+```json
+{
+    "name": "name",
+    "server": "server"
+}
+```
+
 GET `/api/openstack/images/:id`
 
 DELETE (`/api/openstack/images/:id`
@@ -103,15 +100,25 @@ PUT `/api/openstack/servers/:id`
 
 DELETE `/api/openstack/servers/:id`
 
-### Volumes
+### Volumes and types
 
-GET `/api/openstack/volumes/types`
+GET `/api/openstack/types`
 
-GET `/api/openstack/volumes/types/:id`
+GET `/api/openstack/types/:id`
 
 GET `/api/openstack/volumes`
 
 POST `/api/openstack/volumes`
+
+```json
+{
+    "name": "name", //required
+    "description": "description", //required
+    "size": "size", //1-1000 gb
+    "volumeType" : "volumeType", //optional, defaults to spindles
+    "snapshotId": "snapshotId" //optional, the snapshotId to use when creating the volume
+}
+```
 
 PUT `/api/openstack/volumes`
 
@@ -119,21 +126,21 @@ GET `/api/openstack/volumes/:id`
 
 DELETE `/api/openstack/volumes/:id`
 
-#### Snapshots
+#### Snapshots from Volumes
 
-GET `/api/openstack/volumes/snapshots`
+GET `/api/openstack/snapshots`
 
-GET `/api/openstack/volumes/snapshots/:id`
+GET `/api/openstack/snapshots/:id`
 
-POST `/api/openstack/volumes/snapshots`
+POST `/api/openstack/snapshots`
 
 ### Instances Volume Attach
 
-GET `/api/openstack/servers/volumes/:id`
+GET `/api/openstack/attachments`
 
-POST `/api/openstack/servers/volumes/attach`
+POST `/api/openstack/attach`
 
-POST `/api/openstack/servers/volumes/detach`
+POST `/api/openstack/detach`
 
 ### Network
 
@@ -149,28 +156,30 @@ PUT `/api/openstack/networks`
 
 ####Floating IPS
 
-GET `/api/openstack/networks/FloatingIps`
+GET `/api/openstack/ips`
+
+POST `/api/openstack/ips`
 
 #### Subnets
 
-GET `/api/openstack/networks/subnets`
+GET `/api/openstack/subnets`
 
-GET `/api/openstack/networks/subnets/:id`
+GET `/api/openstack/subnets/:id`
 
-POST `/api/openstack/networks/subnets`
+POST `/api/openstack/subnets`
 
-PUT `/api/openstack/networks/subnets`
+PUT `/api/openstack/subnets`
 
-DELETE `/api/openstack/networks/subnets/:id`
+DELETE `/api/openstack/subnets/:id`
 
 #### Ports
 
-GET `/api/openstack/networks/ports`
+GET `/api/openstack/ports`
 
-GET `/api/openstack/networks/ports/:id`
+GET `/api/openstack/ports/:id`
 
-POST `/api/openstack/networks/ports`
+POST `/api/openstack/ports`
 
-PUT `/api/openstack/networks/ports`
+PUT `/api/openstack/ports`
 
-DELETE `/api/openstack/networks/ports/:id`
+DELETE `/api/openstack/ports/:id`

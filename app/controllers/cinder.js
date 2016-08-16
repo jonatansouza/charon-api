@@ -47,13 +47,7 @@ module.exports = function(app) {
     }
 
     controller.createVolume = function(req, res) {
-        var options = {
-            name: req.body.name, // required
-            description: req.body.description || 'default',// required
-            size: req.body.size || 5, // 100-1000 gb
-            volumeType: req.body.volumeType || 'lvmdriver-1', // optional, defaults to spindles
-            snapshotId: req.body.snapshotId || '' // optional, the snapshotId to use when creating the volume
-        }
+        var options = req.body;
         console.log(options);
         openstack.blockstorage.createVolume(options, function(err, volume) {
             if (err) {

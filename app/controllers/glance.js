@@ -34,12 +34,7 @@ module.exports = function(app) {
     }
 
     controller.createImage = function(req, res) {
-        console.log('creating image ******');
-        var options = {
-            name: req.body.name,
-            server: req.body.server
-        }
-
+        var options = req.body;
         console.log(options);
         openstack.compute.createImage(options, function(err, image) {
             if (err) {
