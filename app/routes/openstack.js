@@ -28,7 +28,6 @@ module.exports = function(app) {
 
     app.get('/api/openstack/rules', neutronController.getSecurityGroupRules);
     app.get('/api/openstack/rules/:id', neutronController.getSecurityGroupRule);
-    app.post('/api/openstack/rules', neutronController.createSecurityGroupRule);
     app.delete('/api/openstack/rules/:id', neutronController.destroySecurityGroupRule);
     app.post('/api/openstack/rules', novaController.addRule);
 

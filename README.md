@@ -44,6 +44,8 @@ POST `/api/openstack/keys`
 
 GET `/api/openstack/groups`
 
+GET `/api/openstack/groups/:id`
+
 POST `/api/openstack/groups`
 
 ```json
@@ -53,7 +55,15 @@ POST `/api/openstack/groups`
 }
 ```
 
-POST `/api/openstack/groups/rules`
+DELETE `/api/openstack/groups/:id`
+
+GET `/api/openstack/rules`
+
+GET `/api/openstack/rules/:id`
+
+DELETE `/api/openstack/rules/:id`
+
+POST `/api/openstack/rules`
 
 ```json
 {
