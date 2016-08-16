@@ -28,6 +28,19 @@ GET  `/api/openstack/version`
 
 GET  `/api/openstack/limits`
 
+###SSH keys
+
+GET `/api/openstack/keys`
+
+POST `/api/openstack/keys`
+
+```json
+{
+    "name": "name",
+    "public_key": "ssh.public_key"
+}
+```
+
 ###Flavors
 
 GET  `/api/openstack/flavors`

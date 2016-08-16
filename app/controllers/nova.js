@@ -140,7 +140,7 @@ module.exports = function(app) {
             res.status(200).json(flavor);
 
         });
-    }
+    };
 
 
     controller.limits = function(req, res) {
@@ -151,7 +151,28 @@ module.exports = function(app) {
             }
             res.status(200).json(limits);
         });
-    }
+    };
+
+    controller.getKeys = function(req, res) {
+        openstack.compute.listKeys(function(err, keys) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(keys);
+        });
+    };
+
+    controller.addKey = function(req, res) {
+        var options = req.body;
+        openstack.compute.addKey(options, function(err, key) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(key);
+        })
+    };
     return controller;
 
 }
