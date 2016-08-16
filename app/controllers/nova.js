@@ -5,12 +5,7 @@ module.exports = function(app) {
 
     controller.createServer = function(req, res) {
 
-        var options = {
-            name: req.body.name,
-            flavor: req.body.flavor,
-            image: req.body.image
-        };
-
+        var options = req.body;
 
         openstack.compute.createServer(options, function(err, server) {
             if (err) {

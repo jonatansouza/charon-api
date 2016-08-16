@@ -94,6 +94,14 @@ GET `/api/openstack/servers`
 
 POST `/api/openstack/servers`
 
+```json
+{
+    "name": "name",
+    "flavor": "flavor",
+    "image": "image"
+}
+```
+
 GET `/api/openstack/servers/:id`
 
 PUT `/api/openstack/servers/:id`
@@ -112,11 +120,11 @@ POST `/api/openstack/volumes`
 
 ```json
 {
-    "name": "name", //required
-    "description": "description", //required
-    "size": "size", //1-1000 gb
-    "volumeType" : "volumeType", //optional, defaults to spindles
-    "snapshotId": "snapshotId" //optional, the snapshotId to use when creating the volume
+    "name": "name",
+    "description": "description",
+    "size": "size",
+    "volumeType" : "volumeType",
+    "snapshotId": "snapshotId"
 }
 ```
 
@@ -140,7 +148,21 @@ GET `/api/openstack/attachments`
 
 POST `/api/openstack/attach`
 
+```json
+{
+  "server":"server",
+  "volume":"volume"
+}
+```
+
 POST `/api/openstack/detach`
+
+```json
+{
+  "server":"server",
+  "volume":"volume"
+}
+```
 
 ### Network
 
