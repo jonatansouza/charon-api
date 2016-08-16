@@ -171,8 +171,30 @@ module.exports = function(app) {
                 return
             }
             res.status(200).json(key);
-        })
+        });
     };
+
+    controller.getGroups = function(req, res){
+      openstack.compute.listGroups(function(err, groups) {
+          if (err) {
+              res.status(err.statusCode || 500).json(err);
+              return
+          }
+          res.status(200).json(groups);
+      });
+    };
+
+    controller.addGroup = function(req, res) {
+        var options = req.body;
+        openstack.compute.addGroup(options, function(err, group) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(group);
+        });
+    };
+
     return controller;
 
 }

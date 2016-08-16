@@ -34,11 +34,23 @@ GET `/api/openstack/keys`
 
 POST `/api/openstack/keys`
 
-####Params
 ```json
 {
     "name": "name",
     "public_key": "ssh.public_key"
+}
+```
+
+###Groups
+
+GET `/api/openstack/groups`
+
+POST `/api/openstack/groups`
+
+```json
+{
+  "name": "name",
+  "description": "description"
 }
 ```
 

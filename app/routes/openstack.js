@@ -12,6 +12,10 @@ module.exports = function(app) {
     app.get('/api/openstack/keys', novaController.getKeys);
     app.post('/api/openstack/keys', novaController.addKey);
 
+    //Groups
+    app.get('/api/openstack/groups', novaController.getGroups);
+    app.post('/api/openstack/groups', novaController.addGroup);
+
     //flavor
     app.get('/api/openstack/flavors', novaController.getFlavors);
     app.get('/api/openstack/flavors/:id', novaController.getFlavorById);
