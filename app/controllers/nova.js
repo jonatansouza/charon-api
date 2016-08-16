@@ -11,7 +11,7 @@ module.exports = function(app) {
             image: req.body.image
         };
 
-        console.log(options);
+
         openstack.compute.createServer(options, function(err, server) {
             if (err) {
                 var status = err.statusCode || 500;

@@ -248,5 +248,15 @@ module.exports = function(app) {
         });
     }
 
+    controller.getFloatingIps = function(req, res) {
+        openstack.network.getFloatingIps(function(err, ips) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.status(200).json(ips);
+        });
+    };
+
     return controller;
 }

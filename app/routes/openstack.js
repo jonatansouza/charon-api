@@ -9,7 +9,7 @@ module.exports = function(app) {
     var novaController = app.controllers.nova,
         glanceController = app.controllers.glance,
         cinderController = app.controllers.cinder;
-        neutronController = app.controllers.neutron;
+    neutronController = app.controllers.neutron;
 
     //general info
     app.get('/api/openstack/version', novaController.version);
@@ -20,9 +20,17 @@ module.exports = function(app) {
     app.post('/api/openstack/keys', novaController.addKey);
 
     //Groups
+
     app.get('/api/openstack/groups', novaController.getGroups);
+    app.get('/api/openstack/groups/:id', neutronController.getSecurityGroup);
     app.post('/api/openstack/groups', novaController.addGroup);
-    app.post('/api/openstack/groups/rules', novaController.addRule);
+    app.delete('/api/openstack/groups/:id', neutronController.destroySecurityGroup);
+
+    app.get('/api/openstack/rules', neutronController.getSecurityGroupRules);
+    app.get('/api/openstack/rules/:id', neutronController.getSecurityGroupRule);
+    app.post('/api/openstack/rules', neutronController.createSecurityGroupRule);
+    app.delete('/api/openstack/rules/:id', neutronController.destroySecurityGroupRule);
+    app.post('/api/openstack/rules', novaController.addRule);
 
     //flavor
     app.get('/api/openstack/flavors', novaController.getFlavors);
@@ -94,18 +102,4 @@ module.exports = function(app) {
     app.get('/api/openstack/ips', novaController.getFloatingIps);
     app.post('/api/openstack/ips', novaController.allocateNewFloatingIp);
 
-    //securityGroup
-
-    /*app.get('/api/openstack/networks/groups', neutronController.getSecurityGroups);
-    app.get('/api/openstack/networks/groups/:id', neutronController.getSecurityGroup);
-
-    app.post('/api/openstack/networks/groups', neutronController.createSecurityGroup);
-    app.delete('/api/openstack/networks/groups/:id', neutronController.destroySecurityGroup);
-
-    //securityGroupRules
-    app.get('/api/openstack/networks/groups/rules', neutronController.getSecurityGroupRules);
-    app.get('/api/openstack/networks/groups/rules/:id', neutronController.getSecurityGroupRule);
-    app.post('/api/openstack/networks/groups/rules', neutronController.createSecurityGroupRule);
-    app.delete('/api/openstack/networks/groups/rules/:id', neutronController.destroySecurityGroupRule);
-    */
 };
