@@ -34,7 +34,7 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            req.volume = volumes;
+            req.volumes = volumes;
             next();
         });
     }
