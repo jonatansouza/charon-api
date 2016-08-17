@@ -3,50 +3,54 @@ var openstack = require('../../config/openstack-utils');
 module.exports = function(app) {
     var controller = {};
 
-    controller.getVolumeTypes = function(req, res) {
+    controller.getVolumeTypes = function(req, res, next) {
 
         openstack.blockstorage.getVolumeTypes(function(err, volumes) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volumes);
+            req.volumes = volumes;
+            next();
         });
     }
 
-    controller.getVolumeType = function(req, res) {
+    controller.getVolumeType = function(req, res, next) {
 
         openstack.blockstorage.getVolumeType(req.params.id, function(err, volume) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volume);
+            req.volume = volume;
+            next();
         });
     }
 
-    controller.getVolumes = function(req, res) {
+    controller.getVolumes = function(req, res, next) {
 
         openstack.blockstorage.getVolumes(function(err, volumes) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volumes);
+            req.volume = volumes;
+            next();
         });
     }
 
-    controller.getVolumeById = function(req, res) {
+    controller.getVolumeById = function(req, res, next) {
         openstack.blockstorage.getVolume(req.params.id, function(err, volume) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volume);
+            req.volume = volume;
+            next();
         });
     }
 
-    controller.createVolume = function(req, res) {
+    controller.createVolume = function(req, res, next) {
         var options = req.body;
         console.log(options);
         openstack.blockstorage.createVolume(options, function(err, volume) {
@@ -54,23 +58,25 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volume);
+            req.volume = volume;
+            next();
         });
     }
 
-    controller.deleteVolume = function(req, res) {
+    controller.deleteVolume = function(req, res, next) {
             console.log(req.params.id);
             openstack.blockstorage.deleteVolume(req.params.id, function(err, volume) {
                 if (err) {
                     res.status(err.statusCode || 500).json(err);
                     return
                 }
-                res.status(200).json(volume);
+                req.volume = volume;
+                next();
             });
 
         }
         //update name and description
-    controller.updateVolume = function(req, res) {
+    controller.updateVolume = function(req, res, next) {
         var volume = {
             id: req.body.id,
             name: req.body.name || 'default',
@@ -85,32 +91,35 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volume);
+            req.volume = volume;
+            next();
         });
 
     }
 
-    controller.getSnapshots = function(req, res) {
+    controller.getSnapshots = function(req, res, next) {
         openstack.blockstorage.getSnapshots(function(err, snapshots) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(snapshots);
+            req.snapshots = snapshots;
+            next();
         });
     }
 
-    controller.getSnapshotById = function(req, res) {
+    controller.getSnapshotById = function(req, res, next) {
         openstack.blockstorage.getSnapshot(req.params.id, function(err, snapshot) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(snapshot);
+            req.snapshot = snapshot;
+            next();
         });
     }
 
-    controller.createSnapshot = function(req, res) {
+    controller.createSnapshot = function(req, res, next) {
         var options = {
             name: req.body.name, // required
             description: req.body.description, // required
@@ -123,7 +132,8 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(statusCode);
+            req.volume = snapshot;
+            next();
         });
     }
 

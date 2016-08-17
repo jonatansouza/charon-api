@@ -3,7 +3,7 @@ var openstack = require('../../config/openstack-utils');
 module.exports = function(app) {
     var controller = {};
 
-    controller.createServer = function(req, res) {
+    controller.createServer = function(req, res, next) {
 
         var options = req.body;
 
@@ -13,62 +13,67 @@ module.exports = function(app) {
                 res.status(status).json(err);
                 return
             }
-            res.status(200).json(server);
+            req.server = server;
+            next();
         });
     }
 
-    controller.getServers = function(req, res) {
+    controller.getServers = function(req, res, next) {
         openstack.compute.getServers(function(err, servers) {
             if (err) {
                 console.log(err);
-                res.status(err.statusCode || 500).json(err);
-                return
+                return res.status(err.statusCode || 500).json(err);
             }
-            res.status(200).json(servers);
+            req.servers = servers;
+            next();
         });
     }
 
-    controller.getServerById = function(req, res) {
+    controller.getServerById = function(req, res, next) {
         openstack.compute.getServer(req.params.id, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(server);
+            req.server = server;
+            next();
         });
     }
 
-    controller.destroyServer = function(req, res) {
+    controller.destroyServer = function(req, res, next) {
         openstack.compute.destroyServer(req.params.id, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(server);
+            req.server = server;
+            next();
         });
     }
 
-    controller.rebootServer = function(req, res) {
+    controller.rebootServer = function(req, res, next) {
         openstack.compute.rebootServer(req.params.id, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(server);
+            req.server = server;
+            next();
         });
     }
 
-    controller.volumeAttachments = function(req, res) {
+    controller.volumeAttachments = function(req, res, next) {
         openstack.compute.getVolumeAttachments(req.params.id, function(err, volumes) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volumes);
+            req.volumes = volumes;
+            next();
         });
     }
 
-    controller.attachVolume = function(req, res) {
+    controller.attachVolume = function(req, res, next) {
         serverId = req.body.server;
         volumeId = req.body.volume;
 
@@ -83,11 +88,12 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(volume);
+            req.volume = volume;
+            next();
         });
     }
 
-    controller.detachVolume = function(req, res) {
+    controller.detachVolume = function(req, res, next) {
         serverId = req.body.server;
         volumeId = req.body.volume;
 
@@ -102,123 +108,156 @@ module.exports = function(app) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200);
+            var volume = {
+                "status": "deleted"
+            };
+            req.volume = volume;
+            next();
         });
     }
 
-    controller.version = function(req, res) {
+    controller.version = function(req, res, next) {
         openstack.compute.getVersion(function(err, version) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(version);
+            req.version = version;
+            next();
         });
     }
 
-    controller.getFlavors = function(req, res) {
+    controller.getFlavors = function(req, res, next) {
         openstack.compute.getFlavors(function(err, flavors) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(flavors);
+            req.flavors = flavors;
+            next();
         });
     };
 
-    controller.getFlavorById = function(req, res) {
+    controller.getFlavorById = function(req, res, next) {
         openstack.compute.getFlavor(req.params.id, function(err, flavor) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(flavor);
-
+            req.flavor = flavor;
+            next();
         });
     };
 
 
-    controller.limits = function(req, res) {
+    controller.limits = function(req, res, next) {
         openstack.compute.getLimits(function(err, limits) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(limits);
+            req.limits = limits;
+            next();
         });
     };
 
-    controller.getKeys = function(req, res) {
+    controller.getKeys = function(req, res, next) {
         openstack.compute.listKeys(function(err, keys) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(keys);
+            req.keys = keys;
+            next();
         });
     };
 
-    controller.addKey = function(req, res) {
+    controller.addKey = function(req, res, next) {
         var options = req.body;
         openstack.compute.addKey(options, function(err, key) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(key);
+            req.key = key;
+            next();
         });
     };
 
-    controller.getGroups = function(req, res) {
+    controller.getGroups = function(req, res, next) {
         openstack.compute.listGroups(function(err, groups) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(groups);
+            req.groups = groups;
+            next();
         });
     };
 
-    controller.addGroup = function(req, res) {
+    controller.addGroup = function(req, res, next) {
         var options = req.body;
         openstack.compute.addGroup(options, function(err, group) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(group);
+            req.group = group;
+            next();
         });
     };
 
-    controller.addRule = function(req, res) {
+    controller.addRule = function(req, res, next) {
         var options = req.body;
         openstack.compute.addRule(options, function(err, rule) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(rule);
+            req.rule = rule;
+            next();
         });
     };
 
-    controller.getFloatingIps = function(req, res) {
+    controller.getFloatingIps = function(req, res, next) {
         openstack.compute.getFloatingIps(function(err, ips) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(ips);
+            req.ips = ips;
+            next();
         });
     };
-    controller.allocateNewFloatingIp = function(req, res) {
+    controller.allocateNewFloatingIp = function(req, res, next) {
         openstack.compute.allocateNewFloatingIp(function(err, ip) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            res.status(200).json(ip);
+            req.ip = ip;
+            next();
         });
     }
+
+    controller.addFloatingIp = function(req, res, next) {
+        openstack.compute.addFloatingIp(req.body.server, req.body.ip, function(err, server) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            req.server = server;
+            next();
+        });
+    };
+
+    controller.iotInstance = function(req, res, next) {
+
+
+    };
+
+
+
     return controller;
 
 }

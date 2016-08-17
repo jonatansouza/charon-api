@@ -4,27 +4,29 @@ var openstack = require('../../config/openstack-utils'),
 module.exports = function(app) {
     var controller = {};
 
-    controller.getContainers = function(req, res) {
+    controller.getContainers = function(req, res, next) {
         openstack.storage.getContainers(function(err, containers) {
             if (err) {
                 res.status(500).json(err);
                 return
             }
-            res.status(200).json(containers);
+            req.containers = containers;
+            next();
         });
     }
 
-    controller.getContainerById = function(req, res) {
+    controller.getContainerById = function(req, res, next) {
         openstack.storage.getContainer(req.params.id, function(err, container) {
             if (err) {
                 res.status(500).json(err);
                 return
             }
-            res.status(200).json(container);
+            req.container = container;
+            next();
         });
     }
 
-    controller.createContainer = function(req, res) {
+    controller.createContainer = function(req, res, next) {
         var options = {
             name: req.body.name,
             metadata: {
@@ -40,7 +42,8 @@ module.exports = function(app) {
             res.status(500).json(err);
             return
           }
-          res.status(200).json(container);
+          req.container = container;
+          next();
         })
     }
     return controller;

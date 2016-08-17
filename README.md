@@ -182,6 +182,15 @@ GET `/api/openstack/ips`
 
 POST `/api/openstack/ips`
 
+POST `/api/openstack/allocate`
+
+```json
+  {
+    "server":"server",
+    "ip":"ip"
+  }
+```
+
 #### Subnets
 
 GET `/api/openstack/subnets`
