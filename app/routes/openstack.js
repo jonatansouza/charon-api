@@ -4,7 +4,9 @@ module.exports = function(app) {
         cinderController = app.controllers.cinder,
         neutronController = app.controllers.neutron,
         dockerController = app.controllers.docker;
+        welcomeController = app.controllers.welcome;
 
+    app.get('/', welcomeController.welcome);
     //general info
     app.get('/api/openstack/version',
         novaController.version,
