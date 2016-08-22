@@ -4,9 +4,7 @@ module.exports = function(app) {
     var controller = {};
 
     controller.createServer = function(req, res, next) {
-
         var options = req.body;
-
         openstack.compute.createServer(options, function(err, server) {
             if (err) {
                 var status = err.statusCode || 500;
@@ -62,6 +60,37 @@ module.exports = function(app) {
         });
     }
 
+    controller.stopServer = function(req, res, next) {
+        openstack.compute.stopServer(req.params.id, function(err, server) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            req.server = {
+                status: 'ok',
+                server: req.params.id,
+                state: 'stoped'
+            };
+            next();
+        });
+    };
+    controller.startServer = function(req, res, next) {
+        openstack.compute.startServer(req.params.id, function(err, server) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            console.log(server);
+            req.server = {
+                status: 'ok',
+                server: req.params.id,
+                state: 'started'
+            };
+            next();
+        });
+    };
+
+    
     controller.volumeAttachments = function(req, res, next) {
         openstack.compute.getVolumeAttachments(req.params.id, function(err, volumes) {
             if (err) {
@@ -220,12 +249,13 @@ module.exports = function(app) {
     };
 
     controller.getFloatingIps = function(req, res, next) {
-        openstack.compute.getFloatingIps(function(err, ips) {
+        openstack.compute.getFloatingIps(function(err, ipsFromOpenstack) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            req.ips = ips;
+            req.ipsFromOpenstack = ipsFromOpenstack;
+            console.log(req.ipsFromOpenstack);
             next();
         });
     };
@@ -241,7 +271,9 @@ module.exports = function(app) {
     }
 
     controller.addFloatingIp = function(req, res, next) {
-        openstack.compute.addFloatingIp(req.body.server, req.body.ip, function(err, server) {
+        var server = req.body.server || req.server;
+        var ip = req.body.ip || req.ip;
+        openstack.compute.addFloatingIp(server, ip, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
@@ -252,7 +284,6 @@ module.exports = function(app) {
     };
 
     controller.iotInstance = function(req, res, next) {
-
 
     };
 

@@ -4,7 +4,7 @@ module.exports = function(app) {
         cinderController = app.controllers.cinder,
         neutronController = app.controllers.neutron,
         dockerController = app.controllers.docker;
-        welcomeController = app.controllers.welcome;
+    welcomeController = app.controllers.welcome;
 
     app.get('/', welcomeController.welcome);
     //general info
@@ -122,7 +122,6 @@ module.exports = function(app) {
             res.json(req.image);
         }
     );
-
     app.delete('/api/openstack/images/:id',
         glanceController.destroyImage,
         (req, res) => {
@@ -131,6 +130,21 @@ module.exports = function(app) {
     );
 
     //server instances
+
+    app.get('/api/openstack/server/stop/:id',
+        novaController.stopServer,
+        (req, res) => {
+            res.json(req.server);
+        }
+    );
+
+    app.get('/api/openstack/server/start/:id',
+        novaController.startServer,
+        (req, res) => {
+            res.json(req.server);
+        }
+    );
+
     app.get('/api/openstack/servers',
         novaController.getServers,
         (req, res) => {
@@ -356,7 +370,7 @@ module.exports = function(app) {
     app.get('/api/openstack/ips',
         novaController.getFloatingIps,
         (req, res) => {
-            res.json(req.ips);
+            res.json(req.ipsFromOpenstack);
         }
     );
     app.post('/api/openstack/ips',
@@ -366,6 +380,7 @@ module.exports = function(app) {
         }
     );
     app.post('/api/openstack/allocate',
+        novaController.allocateNewFloatingIp,
         novaController.addFloatingIp,
         (req, res) => {
             res.json(req.ip);

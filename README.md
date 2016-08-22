@@ -108,6 +108,10 @@ PUT `/api/openstack/servers/:id`
 
 DELETE `/api/openstack/servers/:id`
 
+GET `/api/openstack/server/stop/:id`
+
+GET `/api/openstack/server/start/:id`    
+
 ### Volumes and types
 
 GET `/api/openstack/types`
