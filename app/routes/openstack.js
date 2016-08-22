@@ -35,6 +35,12 @@ module.exports = function(app) {
         }
     );
 
+    app.delete('/api/openstack/keys/:id',
+        novaController.removeKey,
+        (req, res) => {
+            res.json(req.key);
+        });
+
     //Groups
 
     app.get('/api/openstack/groups',
@@ -383,7 +389,7 @@ module.exports = function(app) {
         novaController.allocateNewFloatingIp,
         novaController.addFloatingIp,
         (req, res) => {
-            res.json(req.ip);
+            res.json(req.server);
         }
     );
 

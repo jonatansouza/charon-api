@@ -1,4 +1,5 @@
-var openstack = require('../../config/openstack-utils');
+var openstack = require('../../config/openstack-utils'),
+    _ = require('lodash');
 
 module.exports = function(app) {
     var controller = {};
@@ -90,7 +91,7 @@ module.exports = function(app) {
         });
     };
 
-    
+
     controller.volumeAttachments = function(req, res, next) {
         openstack.compute.getVolumeAttachments(req.params.id, function(err, volumes) {
             if (err) {
@@ -213,6 +214,17 @@ module.exports = function(app) {
         });
     };
 
+    controller.removeKey = function(req, res, next) {
+        openstack.compute.destroyKey(req.params.id, function(err, key) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            req.key = key;
+            next();
+        });
+    };
+
     controller.getGroups = function(req, res, next) {
         openstack.compute.listGroups(function(err, groups) {
             if (err) {
@@ -260,25 +272,44 @@ module.exports = function(app) {
         });
     };
     controller.allocateNewFloatingIp = function(req, res, next) {
-        openstack.compute.allocateNewFloatingIp(function(err, ip) {
-            if (err) {
-                res.status(err.statusCode || 500).json(err);
-                return
+        var unused_floating_ips;
+        openstack.compute.getFloatingIps(function(err, ips) {
+            for (i = 0; i < ips.length; i++) {
+                if (!ips[i].instance_id) {
+                    console.log("+++" + ips[i]);
+                    unused_floating_ips = ips[i];
+                    break;
+                }
             }
-            req.ip = ip;
-            next();
+            if (unused_floating_ips) {
+                req.ipFree = unused_floating_ips;
+                next();
+            } else {
+                openstack.compute.allocateNewFloatingIp(function(err, ip) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    req.ipFree = ip;
+                    next();
+                });
+            }
         });
+
     }
 
     controller.addFloatingIp = function(req, res, next) {
         var server = req.body.server || req.server;
-        var ip = req.body.ip || req.ip;
+        var ip = req.body.ip || req.ipFree;
+
         openstack.compute.addFloatingIp(server, ip, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            req.server = server;
+            req.server = {
+              ip: req.ipFree
+            };
             next();
         });
     };
