@@ -1,22 +1,23 @@
 {
-    "name": "charon",
-    "version": "1.0.0",
-    "description": "Middleware to IOT devices and Cloud connect",
-    "main": "server.js",
-    "scripts": {
-        "start": "node node_modules/nodemon/bin/nodemon server.js"
-    },
-    "author": "Jonatan Souza",
-    "license": "ISC",
-    "dependencies": {
-        "body-parser": "^1.13.2",
-        "cors": "^2.7.1",
-        "express": "^4.13.1",
-        "express-load": "^1.1.14",
-        "lodash": "^4.13.1",
-        "method-override": "^2.3.3",
-        "morgan": "^1.7.0",
-        "nodemon": "^1.9.2",
-        "pkgcloud": "^1.3.0"
-    }
+  "name": "charon",
+  "version": "1.0.0",
+  "description": "Middleware to IOT devices and Cloud connect",
+  "main": "server.js",
+  "scripts": {
+    "start": "node node_modules/nodemon/bin/nodemon server.js"
+  },
+  "author": "Jonatan Souza",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "cors": "^2.7.1",
+    "express": "^4.13.1",
+    "express-load": "^1.1.14",
+    "lodash": "^4.13.1",
+    "method-override": "^2.3.3",
+    "morgan": "^1.7.0",
+    "nodemon": "^1.9.2",
+    "pkgcloud": "^1.3.0",
+    "promise": "^7.1.1"
+  }
 }

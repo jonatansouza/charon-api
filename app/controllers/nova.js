@@ -1,5 +1,6 @@
 var openstack = require('../../config/openstack-utils'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    Promise = require('promise');
 
 module.exports = function(app) {
     var controller = {};
@@ -12,9 +13,27 @@ module.exports = function(app) {
                 res.status(status).json(err);
                 return
             }
-            console.log("created!");
-            req.server = server;
-            next();
+
+            function getServerStatus() {
+                console.log("Checking");
+                openstack.compute.getServer(server.id, function(err, s) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    server = s;
+                    if (server.status == "PROVISIONING") {
+                        setTimeout(function() {
+                            getServerStatus();
+                        }, 2000);
+                    } else {
+                        req.server = server;
+                        next();
+                    }
+                });
+            }
+
+            getServerStatus();
         });
     }
 

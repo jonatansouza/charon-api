@@ -219,3 +219,15 @@ POST `/api/openstack/ports`
 PUT `/api/openstack/ports`
 
 DELETE `/api/openstack/ports/:id`
+
+### IoT
+
+POST `/api/openstack/iot`
+
+```json
+{
+    "name": "name",
+    "flavor": "flavor",
+    "image": "image"
+}
+```
