@@ -12,10 +12,29 @@ module.exports = function(app) {
                 res.status(status).json(err);
                 return
             }
+            console.log("created!");
             req.server = server;
             next();
         });
     }
+
+    controller.cleanServers = function(req, res, next) {
+        openstack.compute.getServers(function(err, servers) {
+            if (err) {
+                console.log(err);
+                return res.status(err.statusCode || 500).json(err);
+            }
+            for (var i = 0; i < servers.length; i++) {
+                openstack.compute.destroyServer(servers[i].id, function(err, server) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log(server);
+                });
+            }
+            next();
+        });
+    };
 
     controller.getServers = function(req, res, next) {
         openstack.compute.getServers(function(err, servers) {
@@ -276,7 +295,6 @@ module.exports = function(app) {
         openstack.compute.getFloatingIps(function(err, ips) {
             for (i = 0; i < ips.length; i++) {
                 if (!ips[i].instance_id) {
-                    console.log("+++" + ips[i]);
                     unused_floating_ips = ips[i];
                     break;
                 }
@@ -290,6 +308,7 @@ module.exports = function(app) {
                         res.status(err.statusCode || 500).json(err);
                         return
                     }
+                    console.log("found new floating ip");
                     req.ipFree = ip;
                     next();
                 });
@@ -299,8 +318,8 @@ module.exports = function(app) {
     }
 
     controller.addFloatingIp = function(req, res, next) {
-        var server = req.body.server || req.server;
-        var ip = req.body.ip || req.ipFree;
+        var server = req.body.server || req.server.id;
+        var ip = req.body.ip || req.ipFree.ip;
 
         openstack.compute.addFloatingIp(server, ip, function(err, server) {
             if (err) {
@@ -308,13 +327,15 @@ module.exports = function(app) {
                 return
             }
             req.server = {
-              ip: req.ipFree
+                ip: req.ipFree
             };
+            console.log("addFloatingIp");
             next();
         });
     };
 
     controller.iotInstance = function(req, res, next) {
+
 
     };
 

@@ -90,6 +90,8 @@ DELETE (`/api/openstack/images/:id`
 
 ### Instances
 
+GET `/api/openstack/clean/servers`
+
 GET `/api/openstack/servers`
 
 POST `/api/openstack/servers`
@@ -190,8 +192,7 @@ POST `/api/openstack/allocate`
 
 ```json
   {
-    "server":"server",
-    "ip":"ip"
+    "server":"server"
   }
 ```
 
