@@ -1,8 +1,8 @@
 {
     "provider": "openstack",
-    "keystoneAuthVersion": "v2",
-    "username": "charon",
+    "keystoneAuthVersion": "v3",
+    "username": "admin",
     "password": "adm123",
     "region": "RegionOne",
-    "authUrl": "146.134.235.239:5000"
+    "authUrl": "http://146.134.235.201:5000"
 }

@@ -7,35 +7,17 @@ module.exports = function(app) {
 
     controller.createServer = function(req, res, next) {
         var options = req.body;
+        console.log(options);
         openstack.compute.createServer(options, function(err, server) {
             if (err) {
                 var status = err.statusCode || 500;
                 res.status(status).json(err);
                 return
             }
-
-            function getServerStatus() {
-                console.log("Checking");
-                openstack.compute.getServer(server.id, function(err, s) {
-                    if (err) {
-                        res.status(err.statusCode || 500).json(err);
-                        return
-                    }
-                    server = s;
-                    if (server.status == "PROVISIONING") {
-                        setTimeout(function() {
-                            getServerStatus();
-                        }, 2000);
-                    } else {
-                        req.server = server;
-                        next();
-                    }
-                });
-            }
-
-            getServerStatus();
+            req.server = server;
+            next();
         });
-    }
+    };
 
     controller.cleanServers = function(req, res, next) {
         openstack.compute.getServers(function(err, servers) {
