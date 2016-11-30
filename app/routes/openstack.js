@@ -136,13 +136,13 @@ module.exports = function(app) {
     );
 
     //server instances
-    app.get('/api/openstack/clean/servers',
-        novaController.cleanServers,
-        (req, res) => {
-            res.json("{msg:clean}");
-        }
+    /*  app.get('/api/openstack/clean/servers',
+          novaController.cleanServers,
+          (req, res) => {
+              res.json("{msg:clean}");
+          }
 
-    );
+      );*/
 
 
     app.get('/api/openstack/server/stop/:id',
@@ -393,11 +393,26 @@ module.exports = function(app) {
             res.json(req.ip);
         }
     );
+
+    app.post('/api/openstack/remove/ip',
+        novaController.removeFloatingIp,
+        (req, res) => {
+            res.json(req.floatingIp);
+        }
+    );
+
     app.post('/api/openstack/allocate',
         novaController.allocateNewFloatingIp,
         novaController.addFloatingIp,
         (req, res) => {
             res.json(req.server);
+        }
+    );
+
+    app.post('/api/openstack/deallocate',
+        novaController.deallocateFloatingIp,
+        (req, res) => {
+            res.json(req.floatingIp);
         }
     );
 

@@ -7,7 +7,14 @@ module.exports = function(app) {
 
     controller.createServer = function(req, res, next) {
         var options = req.body;
+
+        if (options.networks == null) {
+            options.networks = [{
+                "uuid": "5ebecb97-dab0-4d13-8397-14e806a79d83"
+            }];
+        }
         console.log(options);
+
         openstack.compute.createServer(options, function(err, server) {
             if (err) {
                 var status = err.statusCode || 500;
@@ -287,11 +294,11 @@ module.exports = function(app) {
                 return
             }
             req.ipsFromOpenstack = ipsFromOpenstack;
-            console.log(req.ipsFromOpenstack);
             next();
         });
     };
     controller.allocateNewFloatingIp = function(req, res, next) {
+        console.log('allocate floating');
         var unused_floating_ips;
         openstack.compute.getFloatingIps(function(err, ips) {
             for (i = 0; i < ips.length; i++) {
@@ -315,32 +322,70 @@ module.exports = function(app) {
                 });
             }
         });
-
     }
 
     controller.addFloatingIp = function(req, res, next) {
-        var server = req.body.server || req.server.id;
+        console.log('add to Instance');
+        var server = req.body.server || req.server;
         var ip = req.body.ip || req.ipFree.ip;
+        var interval = setInterval(function() {
+            if (server.status != 'PROVISIONING') {
+                console.log('ok -- ' + JSON.stringify(server));
+                clearInterval(interval);
+                openstack.compute.addFloatingIp(server, ip, function(err, server) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    req.server = {
+                        ip: req.ipFree
+                    };
+                    console.log("addFloatingIp");
+                    next();
+                });
+            } else {
+                console.log('attempt on add floating');
+                openstack.compute.getServer(server.id, function(err, s) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    server = s;
+                });
+            }
+        }, 5000);
 
-        openstack.compute.addFloatingIp(server, ip, function(err, server) {
+    };
+
+    controller.removeFloatingIp = function(req, res, next) {
+        openstack.compute.removeFloatingIp(req.body.server, req.body.floatingIp, function(err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
             }
-            req.server = {
-                ip: req.ipFree
-            };
-            console.log("addFloatingIp");
+            req.floatingIp = server
+            console.log("removeFloatingIp");
             next();
         });
     };
 
+    controller.deallocateFloatingIp = function(req, res, next) {
+        var ip = {};
+        ip.id = req.body.floatingIp;
+        openstack.compute.deallocateFloatingIp(ip, function(err, ip) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            req.floatingIp = ip
+            console.log("deallocateFloatingIp");
+            next();
+        });
+    }
     controller.iotInstance = function(req, res, next) {
 
 
     };
-
-
 
     return controller;
 

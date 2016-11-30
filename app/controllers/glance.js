@@ -41,6 +41,7 @@ module.exports = function(app) {
         console.log(options);
         openstack.compute.createImage(options, function(err, image) {
             if (err) {
+                console.log(err);
                 res.status(err.statusCode || 500).json(err);
                 return
             }
