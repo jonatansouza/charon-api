@@ -382,6 +382,7 @@ module.exports = function(app) {
             next();
         });
     }
+
     controller.iotInstance = function(req, res, next) {
 
 
