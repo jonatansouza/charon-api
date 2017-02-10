@@ -1,0 +1,10 @@
+{
+  "openstack": {
+        "provider": "openstack",
+        "keystoneAuthVersion": "v3",
+        "username": "admin",
+        "password": "adm123",
+        "region": "RegionOne",
+        "authUrl": "http://146.134.235.201:5000"
+  }
+}

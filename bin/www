@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var app = require('../app')
+  , port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT)
+  , addr = (process.env.OPENSHIFT_NODEJS_IP   || process.env.ADDR)
+
+app.set('port', (port || 5000));
+app.set('address', (addr || '0.0.0.0'));
+
+app.listen(app.get('port'), app.get('address'), function() {
+    console.info(
+        'Server running on %s:%d',
+        app.get('address'),
+        app.get('port')
+        );
+});
