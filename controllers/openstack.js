@@ -56,8 +56,6 @@ exports.createServer = (req, res) => {
             "uuid": "5ebecb97-dab0-4d13-8397-14e806a79d83"
         }];
     }
-    console.log(options);
-
     openstack.nova.createServer(options, function(err, server) {
         if (err) {
             debug(err);
@@ -66,6 +64,32 @@ exports.createServer = (req, res) => {
         res.json(server);
     });
 };
+
+exports.createServerDefault = (req, res) => {
+    var options = req.body;
+    openstack.neutron.getNetworks(function(err, networks) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        var privateNetwork = {};
+        networks.forEach(function(el, index, array) {
+            if (!el.shared) {
+                options.networks = [{
+                    "uuid": el.id
+                }];
+            }
+        });
+        console.log(options);
+        openstack.nova.createServer(options, function(err, server) {
+          if (err) {
+            debug(err);
+            return res.status(err.statusCode || 500).json(err);
+          }
+          res.json(server);
+        });
+    });
+}
 
 exports.destroyServer = (req, res) => {
     openstack.nova.destroyServer(req.params.id, function(err, server) {
@@ -117,6 +141,31 @@ exports.starServer = (req, res) => {
 };
 
 /**
+ * FLvors
+ **/
+
+exports.getFlavors = (req, res) => {
+    openstack.nova.getFlavors(function(err, flavors) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        res.json(flavors);
+    });
+};
+
+exports.getFlavorById = (req, res) => {
+    openstack.nova.getFlavor(req.params.id, function(err, flavor) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        res.json(flavor);
+    });
+};
+
+
+/**
  * IMAGES
  */
 
@@ -130,7 +179,7 @@ exports.getImages = (req, res) => {
     });
 }
 
-exports.getImageById = (req, res) =>  {
+exports.getImageById = (req, res) => {
     openstack.glance.getImage(req.params.id, function(err, image) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -140,7 +189,7 @@ exports.getImageById = (req, res) =>  {
     });
 }
 
-exports.destroyImage = (req, res) =>  {
+exports.destroyImage = (req, res) => {
     openstack.glance.destroyImage(req.params.id, function(err, image) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -161,10 +210,10 @@ exports.createImage = (req, res) => {
 }
 
 /**
-* BLOCKSTORAGE
-*/
+ * BLOCKSTORAGE
+ */
 
-exports.getVolumeTypes = (req, res) =>  {
+exports.getVolumeTypes = (req, res) => {
 
     openstack.cinder.getVolumeTypes(function(err, volumes) {
         if (err) {
@@ -176,7 +225,7 @@ exports.getVolumeTypes = (req, res) =>  {
     });
 }
 
-exports.getVolumeType = (req, res) =>  {
+exports.getVolumeType = (req, res) => {
 
     openstack.cinder.getVolumeType(req.params.id, function(err, volume) {
         if (err) {
@@ -188,7 +237,7 @@ exports.getVolumeType = (req, res) =>  {
     });
 }
 
-exports.getVolumes = (req, res) =>  {
+exports.getVolumes = (req, res) => {
 
     openstack.cinder.getVolumes(function(err, volumes) {
         if (err) {
@@ -200,7 +249,7 @@ exports.getVolumes = (req, res) =>  {
     });
 }
 
-exports.getVolumeById = (req, res) =>  {
+exports.getVolumeById = (req, res) => {
     openstack.cinder.getVolume(req.params.id, function(err, volume) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -211,7 +260,7 @@ exports.getVolumeById = (req, res) =>  {
     });
 }
 
-exports.createVolume = (req, res) =>  {
+exports.createVolume = (req, res) => {
     var options = req.body;
     console.log(options);
     openstack.cinder.createVolume(options, function(err, volume) {
@@ -224,20 +273,20 @@ exports.createVolume = (req, res) =>  {
     });
 }
 
-exports.deleteVolume = (req, res) =>  {
-        console.log(req.params.id);
-        openstack.cinder.deleteVolume(req.params.id, function(err, volume) {
-            if (err) {
-                res.status(err.statusCode || 500).json(err);
-                return
-            }
-            res.json(volume);
+exports.deleteVolume = (req, res) => {
+    console.log(req.params.id);
+    openstack.cinder.deleteVolume(req.params.id, function(err, volume) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        res.json(volume);
 
-        });
+    });
 
-    }
-    //update name and description
-exports.updateVolume = (req, res) =>  {
+}
+//update name and description
+exports.updateVolume = (req, res) => {
     var volume = {
         id: req.body.id,
         name: req.body.name || 'default',
@@ -255,18 +304,18 @@ exports.updateVolume = (req, res) =>  {
 
 }
 
-exports.getSnapshots = (req, res) =>  {
+exports.getSnapshots = (req, res) => {
     openstack.cinder.getSnapshots(function(err, snapshots) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
         }
-    res.json(snapshots);
+        res.json(snapshots);
 
     });
 }
 
-exports.getSnapshotById = (req, res) =>  {
+exports.getSnapshotById = (req, res) => {
     openstack.cinder.getSnapshot(req.params.id, function(err, snapshot) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -277,7 +326,7 @@ exports.getSnapshotById = (req, res) =>  {
     });
 }
 
-exports.createSnapshot = (req, res) =>  {
+exports.createSnapshot = (req, res) => {
     openstack.cinder.createSnapshot(req.body, function(err, snapshot) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -354,8 +403,8 @@ exports.addRule = (req, res) => {
 };
 
 /**
-* NETWORKS
-*/
+ * NETWORKS
+ */
 
 exports.getNetworks = (req, res) => {
     openstack.neutron.getNetworks(function(err, networks) {
@@ -616,7 +665,7 @@ exports.destroySecurityGroupRule = (req, res) => {
     });
 }
 
-exports.getFloatingIps = (req, res) =>  {
+exports.getFloatingIps = (req, res) => {
     openstack.nova.getFloatingIps(function(err, ipsFromOpenstack) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -625,7 +674,7 @@ exports.getFloatingIps = (req, res) =>  {
         res.json(ipsFromOpenstack);
     });
 };
-exports.allocateNewFloatingIp = (req, res) =>  {
+exports.allocateNewFloatingIp = (req, res) => {
     console.log('allocate floating');
     var unused_floating_ips;
     openstack.nova.getFloatingIps(function(err, ips) {
@@ -650,7 +699,7 @@ exports.allocateNewFloatingIp = (req, res) =>  {
     });
 }
 
-exports.addFloatingIp = (req, res) =>  {
+exports.addFloatingIp = (req, res) => {
     console.log('add to Instance');
     var server = req.body.server || req.server;
     var ip = req.body.ip || req.ipFree.ip;
@@ -681,7 +730,7 @@ exports.addFloatingIp = (req, res) =>  {
 
 };
 
-exports.removeFloatingIp = (req, res) =>  {
+exports.removeFloatingIp = (req, res) => {
     openstack.nova.removeFloatingIp(req.body.server, req.body.floatingIp, function(err, server) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
@@ -691,7 +740,7 @@ exports.removeFloatingIp = (req, res) =>  {
     });
 };
 
-exports.deallocateFloatingIp = (req, res) =>  {
+exports.deallocateFloatingIp = (req, res) => {
     var ip = {};
     ip.id = req.body.floatingIp;
     openstack.nova.deallocateFloatingIp(ip, function(err, ip) {

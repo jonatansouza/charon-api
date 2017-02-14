@@ -21,12 +21,12 @@ router
 
 router
     .route('/servers')
-    .get(openstack.getServers);
+    .get(openstack.getServers)
+    .post(openstack.createServerDefault)
 
 router
     .route('/servers/:id')
     .get(openstack.getServerById)
-    .post(openstack.createServer)
     .put(openstack.rebootServer)
     .delete(openstack.destroyServer);
 
@@ -110,17 +110,28 @@ router
     .route('/subnets')
     .get(openstack.getSubnets)
     .post(openstack.createSubnet)
-    .put(openstack.updateSubnet)
+    .put(openstack.updateSubnet);
 
 router
     .route('/subnets/:id')
       .get(openstack.getSubnet)
-      .delete(openstack.destroySubnet)
+      .delete(openstack.destroySubnet);
 
+router
+  .route('/flavors')
+  .get(openstack.getFlavors);
 
+router
+  .route('/flavors/:id')
+  .get(openstack.getFlavorById);
 
 /**
  * Expose router module
  */
+
+ /**
+  *  TESTES
+ **/
+
 
 module.exports = router;
