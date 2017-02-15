@@ -30,6 +30,11 @@ router
     .put(openstack.rebootServer)
     .delete(openstack.destroyServer);
 
+router
+  .route('/server')
+  .post(openstack.updateStateServer)
+
+
 /**
  * SECURITY RESOURCES
  */
@@ -114,23 +119,23 @@ router
 
 router
     .route('/subnets/:id')
-      .get(openstack.getSubnet)
-      .delete(openstack.destroySubnet);
+    .get(openstack.getSubnet)
+    .delete(openstack.destroySubnet);
 
 router
-  .route('/flavors')
-  .get(openstack.getFlavors);
+    .route('/flavors')
+    .get(openstack.getFlavors);
 
 router
-  .route('/flavors/:id')
-  .get(openstack.getFlavorById);
+    .route('/flavors/:id')
+    .get(openstack.getFlavorById);
 
 /**
  * Expose router module
  */
 
- /**
-  *  TESTES
+/**
+ *  TESTES
  **/
 
 

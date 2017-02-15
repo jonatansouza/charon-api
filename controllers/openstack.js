@@ -111,6 +111,35 @@ exports.rebootServer = (req, res) => {
     });
 };
 
+exports.updateStateServer = (req, res) => {
+    if(req.body.status === "RUNNING"){
+      openstack.nova.stopServer(req.body.id, function(err, server) {
+          if (err) {
+              res.status(err.statusCode || 500).json(err);
+              return
+          }
+          res.json({
+              status: 'ok',
+              server: req.body.name,
+              state: 'stoped'
+          });
+
+      });
+    }else{
+      openstack.nova.starServer(req.body.id, function(err, server) {
+          if (err) {
+              res.status(err.statusCode || 500).json(err);
+              return
+          }
+          res.json({
+              status: 'ok',
+              server: req.body.name,
+              state: 'started'
+          });
+      });
+    }
+};
+
 exports.stopServer = (req, res) => {
     openstack.nova.stopServer(req.params.id, function(err, server) {
         if (err) {
