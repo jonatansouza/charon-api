@@ -731,33 +731,52 @@ exports.allocateNewFloatingIp = (req, res) => {
 }
 
 exports.addFloatingIp = (req, res) => {
-    console.log('add to Instance');
-    var server = req.body.server || req.server;
-    var ip = req.body.ip || req.ipFree.ip;
-    var interval = setInterval(function() {
-        if (server.status != 'PROVISIONING') {
-            console.log('ok -- ' + JSON.stringify(server));
-            clearInterval(interval);
-            openstack.nova.addFloatingIp(server, ip, function(err, server) {
-                if (err) {
-                    res.status(err.statusCode || 500).json(err);
-                    return
-                }
-                res.json(ip);
-                console.log("addFloatingIp");
+    var server = req.body;
+    var unused_floating_ips;
 
-            });
+    function addToInstance(ip) {
+        var interval = setInterval(function() {
+            if (server.status != 'PROVISIONING') {
+                clearInterval(interval);
+                openstack.nova.addFloatingIp(server.id, ip, function(err, server) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    res.json(ip);
+                });
+            } else {
+                openstack.nova.getServer(server.id, function(err, s) {
+                    if (err) {
+                        res.status(err.statusCode || 500).json(err);
+                        return
+                    }
+                    server = s;
+                });
+            }
+        }, 5000);
+    }
+
+    openstack.nova.getFloatingIps(function(err, ips) {
+        for (var i = 0; i < ips.length; i++) {
+            if (!ips[i].instance_id) {
+                unused_floating_ips = ips[i];
+                break;
+            }
+        }
+        if (unused_floating_ips) {
+            //add a ip to instance here
+            unused_floating_ips;
+            addToInstance(unused_floating_ips);
         } else {
-            console.log('attempt on add floating');
-            openstack.nova.getServer(server.id, function(err, s) {
+            openstack.nova.allocateNewFloatingIp(function(err, ip) {
                 if (err) {
                     res.status(err.statusCode || 500).json(err);
-                    return
                 }
-                server = s;
+                addToInstance(ip)
             });
         }
-    }, 5000);
+    });
 
 };
 

@@ -34,6 +34,10 @@ router
   .route('/server')
   .post(openstack.updateStateServer)
 
+router
+  .route('/server/ip')
+  .post(openstack.addFloatingIp)
+
 
 /**
  * SECURITY RESOURCES
