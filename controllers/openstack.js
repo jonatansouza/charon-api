@@ -50,7 +50,6 @@ exports.getServerById = (req, res) => {
 
 exports.createServer = (req, res) => {
     var options = req.body;
-
     if (options.networks == null) {
         options.networks = [{
             "uuid": "5ebecb97-dab0-4d13-8397-14e806a79d83"
@@ -58,7 +57,7 @@ exports.createServer = (req, res) => {
     }
     openstack.nova.createServer(options, function(err, server) {
         if (err) {
-            debug(err);
+            console.log(err);
             return res.status(err.statusCode || 500).json(err);
         }
         res.json(server);
@@ -80,13 +79,17 @@ exports.createServerDefault = (req, res) => {
                 }];
             }
         });
-        console.log(options);
         openstack.nova.createServer(options, function(err, server) {
-          if (err) {
-            debug(err);
-            return res.status(err.statusCode || 500).json(err);
-          }
-          res.json(server);
+            if (err) {
+                console.log(err.result);
+                if (err.statusCode == 400) {
+                    return res.status(err.statusCode || 500).json({
+                        result: err.result.badRequest.message
+                    });
+                }
+                return res.status(err.statusCode || 500).json(err);
+            }
+            res.json(server);
         });
     });
 }
@@ -112,31 +115,31 @@ exports.rebootServer = (req, res) => {
 };
 
 exports.updateStateServer = (req, res) => {
-    if(req.body.status === "RUNNING"){
-      openstack.nova.stopServer(req.body.id, function(err, server) {
-          if (err) {
-              res.status(err.statusCode || 500).json(err);
-              return
-          }
-          res.json({
-              status: 'ok',
-              server: req.body.name,
-              state: 'stoped'
-          });
+    if (req.body.status === "RUNNING") {
+        openstack.nova.stopServer(req.body.id, function(err, server) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.json({
+                status: 'ok',
+                server: req.body.name,
+                state: 'stoped'
+            });
 
-      });
-    }else{
-      openstack.nova.starServer(req.body.id, function(err, server) {
-          if (err) {
-              res.status(err.statusCode || 500).json(err);
-              return
-          }
-          res.json({
-              status: 'ok',
-              server: req.body.name,
-              state: 'started'
-          });
-      });
+        });
+    } else {
+        openstack.nova.startServer(req.body.id, function(err, server) {
+            if (err) {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            res.json({
+                status: 'ok',
+                server: req.body.name,
+                state: 'started'
+            });
+        });
     }
 };
 
@@ -151,7 +154,6 @@ exports.stopServer = (req, res) => {
             server: req.params.id,
             state: 'stoped'
         });
-
     });
 };
 
