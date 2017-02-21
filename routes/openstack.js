@@ -35,9 +35,12 @@ router
   .post(openstack.updateStateServer)
 
 router
-  .route('/server/ip')
+  .route('/server/ip/add')
   .post(openstack.addFloatingIp)
 
+router
+    .route('/server/ip/rm')
+    .post(openstack.removeFloatingIp);
 
 /**
  * SECURITY RESOURCES
@@ -102,7 +105,6 @@ router
     .route('/ips')
     .get(openstack.getFloatingIps)
     .post(openstack.allocateNewFloatingIp)
-    .delete(openstack.removeFloatingIp);
 
 router
     .route('/ports')

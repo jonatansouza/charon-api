@@ -733,6 +733,34 @@ exports.allocateNewFloatingIp = (req, res) => {
 exports.addFloatingIp = (req, res) => {
     var server = req.body;
     var unused_floating_ips;
+    console.log('addFloatingIp');
+    openstack.nova.getFloatingIps(function(err, ips) {
+        for (var i = 0; i < ips.length; i++) {
+            if (!ips[i].instance_id) {
+                unused_floating_ips = ips[i];
+                break;
+            }
+        }
+        if (unused_floating_ips) {
+            console.log(unused_floating_ips);
+            console.log('inused ip ' + unused_floating_ips);
+            addToInstance(unused_floating_ips);
+        } else {
+          console.log('allocate before');
+            openstack.nova.allocateNewFloatingIp(function(err, ip) {
+                if (err) {
+                    if(err.statusCode == 404){
+                      res.status(err.statusCode).json(err.result.itemNotFound.message)
+                    }else{
+                      res.status(err.statusCode || 500).json(err);
+                    }
+                } else {
+                    console.log('new allocate' + ip);
+                    addToInstance(ip)
+                }
+            });
+        }
+    });
 
     function addToInstance(ip) {
         var interval = setInterval(function() {
@@ -757,36 +785,21 @@ exports.addFloatingIp = (req, res) => {
         }, 5000);
     }
 
-    openstack.nova.getFloatingIps(function(err, ips) {
-        for (var i = 0; i < ips.length; i++) {
-            if (!ips[i].instance_id) {
-                unused_floating_ips = ips[i];
-                break;
-            }
-        }
-        if (unused_floating_ips) {
-            //add a ip to instance here
-            unused_floating_ips;
-            addToInstance(unused_floating_ips);
-        } else {
-            openstack.nova.allocateNewFloatingIp(function(err, ip) {
-                if (err) {
-                    res.status(err.statusCode || 500).json(err);
-                }
-                addToInstance(ip)
-            });
-        }
-    });
 
 };
 
 exports.removeFloatingIp = (req, res) => {
-    openstack.nova.removeFloatingIp(req.body.server, req.body.floatingIp, function(err, server) {
+    var server = req.body.server.id || req.body.server;
+    var floatingIp = req.body.floatingIp.id || req.body.floatingIp;
+    openstack.nova.removeFloatingIp(server, floatingIp, function(err, s) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
         }
-        res.json(server);
+        res.json({
+          server: req.body.server.name || server,
+          floatingIp: floatingIp
+        });
     });
 };
 
@@ -799,6 +812,5 @@ exports.deallocateFloatingIp = (req, res) => {
             return
         }
         res.json(ip);
-
     });
 }
