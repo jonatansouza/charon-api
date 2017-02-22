@@ -81,13 +81,13 @@ exports.createServerDefault = (req, res) => {
         });
         openstack.nova.createServer(options, function(err, server) {
             if (err) {
-                console.log(err.result);
                 if (err.statusCode == 400) {
                     return res.status(err.statusCode || 500).json({
                         result: err.result.badRequest.message
                     });
+                } else {
+                    return res.status(err.statusCode || 500).json(err);
                 }
-                return res.status(err.statusCode || 500).json(err);
             }
             res.json(server);
         });
@@ -172,7 +172,7 @@ exports.starServer = (req, res) => {
 };
 
 /**
- * FLvors
+ * FLavors
  **/
 
 exports.getFlavors = (req, res) => {
@@ -241,7 +241,7 @@ exports.createImage = (req, res) => {
 }
 
 /**
- * BLOCKSTORAGE
+ * BLOCKSTORAGE VOLUMES
  */
 
 exports.getVolumeTypes = (req, res) => {
@@ -293,11 +293,17 @@ exports.getVolumeById = (req, res) => {
 
 exports.createVolume = (req, res) => {
     var options = req.body;
-    console.log(options);
     openstack.cinder.createVolume(options, function(err, volume) {
         if (err) {
-            res.status(err.statusCode || 500).json(err);
-            return
+            if (err.statusCode == 413) {
+                res.status(err.statusCode || 500).json({
+                    result: err.result.overLimit.message
+                });
+                return
+            } else {
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
         }
         res.json(volume);
 
@@ -333,6 +339,103 @@ exports.updateVolume = (req, res) => {
 
     });
 
+}
+
+exports.handlerVolume = (req, res) => {
+    var serverId = req.body.server.id || req.body.server;
+    var volumeId = req.body.volume.id || req.body.volume;
+    if (!(typeof req.body.volume.status == 'undefined') || req.body.volume.status == 'available') {
+        console.log('attach');
+        openstack.nova.attachVolume(serverId, volumeId, function(err, volume) {
+            if (err) {
+                if (err.statusCode == 202 || err.statusCode == 204) {
+                    res.status(200).json({
+                        "message": "volume attached"
+                    });
+                    return
+                }
+                res.status(err.statusCode || 500).json(err);
+                return
+            } else {
+                res.json(volume)
+                return
+            }
+        });
+    } else {
+        console.log('detachVolume');
+        openstack.nova.detachVolume(serverId, volumeId, function(err) {
+            if (err) {
+                if (err.statusCode == 202 || err.statusCode == 204) {
+                    res.status(200).json({
+                        "message": "volume detached"
+                    });
+                    return
+                }
+                res.status(err.statusCode || 500).json(err);
+                return
+            }
+            var volume = {
+                "status": "deleted"
+            };
+            res.json(volume)
+        });
+    }
+}
+
+
+exports.volumeAttachments = (req, res) => {
+    openstack.nova.getVolumeAttachments(req.params.id, function(err, volumes) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        } else {
+            res.json(volumes);
+        }
+
+    });
+}
+
+exports.attachVolume = (req, res) => {
+    serverId = req.body.server;
+    volumeId = req.body.volume;
+
+    openstack.nova.attachVolume(serverId, volumeId, function(err, volume) {
+        if (err) {
+            if (err.statusCode == 202 || err.statusCode == 204) {
+                res.status(200).json({
+                    "message": "volume attached"
+                });
+                return
+            }
+            res.status(err.statusCode || 500).json(err);
+            return
+        } else {
+            res.json(volume)
+            return
+        }
+    });
+}
+
+exports.detachVolume = (req, res) => {
+    var serverId = req.body.server.id || req.body.server;
+    var volumeId = req.body.volume.id || req.body.volume;
+
+    openstack.nova.detachVolume(serverId, volumeId, function(err) {
+        if (err) {
+            if (err.statusCode == 202 || err.statusCode == 204) {
+                res.status(200).json({
+                    "message": "volume detached"
+                });
+                return
+            }
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        var volume = {
+            "status": "deleted"
+        };
+        res.json(volume);
+    });
 }
 
 exports.getSnapshots = (req, res) => {
@@ -746,13 +849,13 @@ exports.addFloatingIp = (req, res) => {
             console.log('inused ip ' + unused_floating_ips);
             addToInstance(unused_floating_ips);
         } else {
-          console.log('allocate before');
+            console.log('allocate before');
             openstack.nova.allocateNewFloatingIp(function(err, ip) {
                 if (err) {
-                    if(err.statusCode == 404){
-                      res.status(err.statusCode).json(err.result.itemNotFound.message)
-                    }else{
-                      res.status(err.statusCode || 500).json(err);
+                    if (err.statusCode == 404) {
+                        res.status(err.statusCode).json(err.result.itemNotFound.message)
+                    } else {
+                        res.status(err.statusCode || 500).json(err);
                     }
                 } else {
                     console.log('new allocate' + ip);
@@ -797,8 +900,8 @@ exports.removeFloatingIp = (req, res) => {
             return
         }
         res.json({
-          server: req.body.server.name || server,
-          floatingIp: floatingIp
+            server: req.body.server.name || server,
+            floatingIp: floatingIp
         });
     });
 };

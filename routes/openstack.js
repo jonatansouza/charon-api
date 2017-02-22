@@ -31,12 +31,12 @@ router
     .delete(openstack.destroyServer);
 
 router
-  .route('/server')
-  .post(openstack.updateStateServer)
+    .route('/server')
+    .post(openstack.updateStateServer)
 
 router
-  .route('/server/ip/add')
-  .post(openstack.addFloatingIp)
+    .route('/server/ip/add')
+    .post(openstack.addFloatingIp)
 
 router
     .route('/server/ip/rm')
@@ -86,6 +86,18 @@ router
     .route('/volumes/:id')
     .get(openstack.getVolumeById)
     .delete(openstack.deleteVolume);
+
+router
+    .route('/volume')
+    .post(openstack.handlerVolume)
+  
+router
+    .route('/types')
+    .get(openstack.getVolumeTypes);
+
+router
+    .route('/types/:id')
+    .get(openstack.getVolumeType);
 
 /**
  * NETWORK
