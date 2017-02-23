@@ -5,14 +5,24 @@
 var app = require('../app')
   , port = (process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT)
   , addr = (process.env.OPENSHIFT_NODEJS_IP   || process.env.ADDR)
+  , io = require('socket.io');
 
 app.set('port', (port || 5000));
 app.set('address', (addr || '0.0.0.0'));
 
-app.listen(app.get('port'), app.get('address'), function() {
+var server = app.listen(app.get('port'), app.get('address'), function() {
     console.info(
         'Server running on %s:%d',
         app.get('address'),
         app.get('port')
         );
+});
+
+var socket = io.listen(server);
+
+socket.on('connection', function(socket) {
+    // Use socket to communicate with this particular client only, sending it it's own id
+    socket.emit('welcome', { message: 'Welcome!', id: socket.id });
+
+    socket.on('i am client', console.log);
 });

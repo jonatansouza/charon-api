@@ -7,10 +7,10 @@ var express = require('express')
   , methodOverrride = require('method-override')
   , app     = express();
 
-
 /**
 * cross origin
 */
+
 app.use(cors());
 
 /**
@@ -35,6 +35,5 @@ app
 /**
  * Expose app module
  */
-
 
 module.exports = app;
