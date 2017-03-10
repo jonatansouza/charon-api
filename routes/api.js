@@ -10,4 +10,10 @@ router
 /**
  * Expose router module
  */
+
+router
+  .route ('/teste')
+  .post((req, res) => {
+    res.json(req.headers)
+  })
 module.exports = router;

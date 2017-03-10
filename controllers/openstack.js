@@ -917,3 +917,14 @@ exports.deallocateFloatingIp = (req, res) => {
         res.json(ip);
     });
 }
+
+exports.getConsole = (req, res) => {
+    
+    openstack.console.getConsole(req.params.id, function(err, console) {
+        if (err) {
+            res.status(err.statusCode || 500).json(err);
+            return
+        }
+        res.json(console);
+    });
+}

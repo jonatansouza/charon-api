@@ -149,6 +149,15 @@ router
     .get(openstack.getFlavorById);
 
 /**
+ *  Console
+ */
+
+router
+    .route('/console/:id')
+    .get(openstack.getConsole);
+
+
+/**
  * Expose router module
  */
 
