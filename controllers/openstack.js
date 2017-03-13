@@ -6,7 +6,7 @@ var openstack = require('../lib/openstack'),
  * INFRAESTRUCTURE INFORMATION
  */
 exports.getLimits = (req, res) => {
-    openstack.nova.getLimits(function(err, limits) {
+    openstack.nova.getLimits(function (err, limits) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -16,7 +16,7 @@ exports.getLimits = (req, res) => {
 };
 
 exports.getVersion = (req, res) => {
-    openstack.nova.getVersion(function(err, version) {
+    openstack.nova.getVersion(function (err, version) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -29,7 +29,7 @@ exports.getVersion = (req, res) => {
  * SERVERS
  */
 exports.getServers = (req, res) => {
-    openstack.nova.getServers(function(err, servers) {
+    openstack.nova.getServers(function (err, servers) {
         if (err) {
             debug(err);
             return res.status(err.statusCode || 500).json(err);
@@ -39,7 +39,7 @@ exports.getServers = (req, res) => {
 };
 
 exports.getServerById = (req, res) => {
-    openstack.nova.getServer(req.params.id, function(err, servers) {
+    openstack.nova.getServer(req.params.id, function (err, servers) {
         if (err) {
             debug(err);
             return res.status(err.statusCode || 500).json(err);
@@ -55,7 +55,7 @@ exports.createServer = (req, res) => {
             "uuid": "5ebecb97-dab0-4d13-8397-14e806a79d83"
         }];
     }
-    openstack.nova.createServer(options, function(err, server) {
+    openstack.nova.createServer(options, function (err, server) {
         if (err) {
             console.log(err);
             return res.status(err.statusCode || 500).json(err);
@@ -66,20 +66,20 @@ exports.createServer = (req, res) => {
 
 exports.createServerDefault = (req, res) => {
     var options = req.body;
-    openstack.neutron.getNetworks(function(err, networks) {
+    openstack.neutron.getNetworks(function (err, networks) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
         }
         var privateNetwork = {};
-        networks.forEach(function(el, index, array) {
+        networks.forEach(function (el, index, array) {
             if (!el.shared) {
                 options.networks = [{
                     "uuid": el.id
                 }];
             }
         });
-        openstack.nova.createServer(options, function(err, server) {
+        openstack.nova.createServer(options, function (err, server) {
             if (err) {
                 if (err.statusCode == 400) {
                     return res.status(err.statusCode || 500).json({
@@ -95,7 +95,7 @@ exports.createServerDefault = (req, res) => {
 }
 
 exports.destroyServer = (req, res) => {
-    openstack.nova.destroyServer(req.params.id, function(err, server) {
+    openstack.nova.destroyServer(req.params.id, function (err, server) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -105,7 +105,7 @@ exports.destroyServer = (req, res) => {
 };
 
 exports.rebootServer = (req, res) => {
-    openstack.nova.rebootServer(req.params.id, function(err, server) {
+    openstack.nova.rebootServer(req.params.id, function (err, server) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -116,7 +116,7 @@ exports.rebootServer = (req, res) => {
 
 exports.updateStateServer = (req, res) => {
     if (req.body.status === "RUNNING") {
-        openstack.nova.stopServer(req.body.id, function(err, server) {
+        openstack.nova.stopServer(req.body.id, function (err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
@@ -129,7 +129,7 @@ exports.updateStateServer = (req, res) => {
 
         });
     } else {
-        openstack.nova.startServer(req.body.id, function(err, server) {
+        openstack.nova.startServer(req.body.id, function (err, server) {
             if (err) {
                 res.status(err.statusCode || 500).json(err);
                 return
@@ -144,7 +144,7 @@ exports.updateStateServer = (req, res) => {
 };
 
 exports.stopServer = (req, res) => {
-    openstack.nova.stopServer(req.params.id, function(err, server) {
+    openstack.nova.stopServer(req.params.id, function (err, server) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -158,7 +158,7 @@ exports.stopServer = (req, res) => {
 };
 
 exports.starServer = (req, res) => {
-    openstack.nova.starServer(req.params.id, function(err, server) {
+    openstack.nova.starServer(req.params.id, function (err, server) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -176,7 +176,7 @@ exports.starServer = (req, res) => {
  **/
 
 exports.getFlavors = (req, res) => {
-    openstack.nova.getFlavors(function(err, flavors) {
+    openstack.nova.getFlavors(function (err, flavors) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -186,7 +186,7 @@ exports.getFlavors = (req, res) => {
 };
 
 exports.getFlavorById = (req, res) => {
-    openstack.nova.getFlavor(req.params.id, function(err, flavor) {
+    openstack.nova.getFlavor(req.params.id, function (err, flavor) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -201,7 +201,7 @@ exports.getFlavorById = (req, res) => {
  */
 
 exports.getImages = (req, res) => {
-    openstack.glance.getImages(function(err, images) {
+    openstack.glance.getImages(function (err, images) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -211,7 +211,7 @@ exports.getImages = (req, res) => {
 }
 
 exports.getImageById = (req, res) => {
-    openstack.glance.getImage(req.params.id, function(err, image) {
+    openstack.glance.getImage(req.params.id, function (err, image) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -221,7 +221,7 @@ exports.getImageById = (req, res) => {
 }
 
 exports.destroyImage = (req, res) => {
-    openstack.glance.destroyImage(req.params.id, function(err, image) {
+    openstack.glance.destroyImage(req.params.id, function (err, image) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -231,7 +231,7 @@ exports.destroyImage = (req, res) => {
 }
 
 exports.createImage = (req, res) => {
-    openstack.glance.createImage(req.body, function(err, image) {
+    openstack.glance.createImage(req.body, function (err, image) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -246,7 +246,7 @@ exports.createImage = (req, res) => {
 
 exports.getVolumeTypes = (req, res) => {
 
-    openstack.cinder.getVolumeTypes(function(err, volumes) {
+    openstack.cinder.getVolumeTypes(function (err, volumes) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -258,7 +258,7 @@ exports.getVolumeTypes = (req, res) => {
 
 exports.getVolumeType = (req, res) => {
 
-    openstack.cinder.getVolumeType(req.params.id, function(err, volume) {
+    openstack.cinder.getVolumeType(req.params.id, function (err, volume) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -270,7 +270,7 @@ exports.getVolumeType = (req, res) => {
 
 exports.getVolumes = (req, res) => {
 
-    openstack.cinder.getVolumes(function(err, volumes) {
+    openstack.cinder.getVolumes(function (err, volumes) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -281,7 +281,7 @@ exports.getVolumes = (req, res) => {
 }
 
 exports.getVolumeById = (req, res) => {
-    openstack.cinder.getVolume(req.params.id, function(err, volume) {
+    openstack.cinder.getVolume(req.params.id, function (err, volume) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -293,7 +293,7 @@ exports.getVolumeById = (req, res) => {
 
 exports.createVolume = (req, res) => {
     var options = req.body;
-    openstack.cinder.createVolume(options, function(err, volume) {
+    openstack.cinder.createVolume(options, function (err, volume) {
         if (err) {
             if (err.statusCode == 413) {
                 res.status(err.statusCode || 500).json({
@@ -312,7 +312,7 @@ exports.createVolume = (req, res) => {
 
 exports.deleteVolume = (req, res) => {
     console.log(req.params.id);
-    openstack.cinder.deleteVolume(req.params.id, function(err, volume) {
+    openstack.cinder.deleteVolume(req.params.id, function (err, volume) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -330,7 +330,7 @@ exports.updateVolume = (req, res) => {
         description: req.body.description || 'default',
 
     }
-    openstack.cinder.updateVolume(volume, function(err, volume) {
+    openstack.cinder.updateVolume(volume, function (err, volume) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -346,7 +346,7 @@ exports.handlerVolume = (req, res) => {
     var volumeId = req.body.volume.id || req.body.volume;
     if (!(typeof req.body.volume.status == 'undefined') || req.body.volume.status == 'available') {
         console.log('attach');
-        openstack.nova.attachVolume(serverId, volumeId, function(err, volume) {
+        openstack.nova.attachVolume(serverId, volumeId, function (err, volume) {
             if (err) {
                 if (err.statusCode == 202 || err.statusCode == 204) {
                     res.status(200).json({
@@ -363,7 +363,7 @@ exports.handlerVolume = (req, res) => {
         });
     } else {
         console.log('detachVolume');
-        openstack.nova.detachVolume(serverId, volumeId, function(err) {
+        openstack.nova.detachVolume(serverId, volumeId, function (err) {
             if (err) {
                 if (err.statusCode == 202 || err.statusCode == 204) {
                     res.status(200).json({
@@ -384,7 +384,7 @@ exports.handlerVolume = (req, res) => {
 
 
 exports.volumeAttachments = (req, res) => {
-    openstack.nova.getVolumeAttachments(req.params.id, function(err, volumes) {
+    openstack.nova.getVolumeAttachments(req.params.id, function (err, volumes) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -399,7 +399,7 @@ exports.attachVolume = (req, res) => {
     serverId = req.body.server;
     volumeId = req.body.volume;
 
-    openstack.nova.attachVolume(serverId, volumeId, function(err, volume) {
+    openstack.nova.attachVolume(serverId, volumeId, function (err, volume) {
         if (err) {
             if (err.statusCode == 202 || err.statusCode == 204) {
                 res.status(200).json({
@@ -420,7 +420,7 @@ exports.detachVolume = (req, res) => {
     var serverId = req.body.server.id || req.body.server;
     var volumeId = req.body.volume.id || req.body.volume;
 
-    openstack.nova.detachVolume(serverId, volumeId, function(err) {
+    openstack.nova.detachVolume(serverId, volumeId, function (err) {
         if (err) {
             if (err.statusCode == 202 || err.statusCode == 204) {
                 res.status(200).json({
@@ -439,7 +439,7 @@ exports.detachVolume = (req, res) => {
 }
 
 exports.getSnapshots = (req, res) => {
-    openstack.cinder.getSnapshots(function(err, snapshots) {
+    openstack.cinder.getSnapshots(function (err, snapshots) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -450,7 +450,7 @@ exports.getSnapshots = (req, res) => {
 }
 
 exports.getSnapshotById = (req, res) => {
-    openstack.cinder.getSnapshot(req.params.id, function(err, snapshot) {
+    openstack.cinder.getSnapshot(req.params.id, function (err, snapshot) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -461,7 +461,7 @@ exports.getSnapshotById = (req, res) => {
 }
 
 exports.createSnapshot = (req, res) => {
-    openstack.cinder.createSnapshot(req.body, function(err, snapshot) {
+    openstack.cinder.createSnapshot(req.body, function (err, snapshot) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -476,7 +476,7 @@ exports.createSnapshot = (req, res) => {
  */
 
 exports.getKeys = (req, res) => {
-    openstack.nova.listKeys(function(err, keys) {
+    openstack.nova.listKeys(function (err, keys) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -486,7 +486,7 @@ exports.getKeys = (req, res) => {
 };
 
 exports.addKey = (req, res) => {
-    openstack.nova.addKey(req.body, function(err, key) {
+    openstack.nova.addKey(req.body, function (err, key) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -496,7 +496,7 @@ exports.addKey = (req, res) => {
 };
 
 exports.removeKey = (req, res) => {
-    openstack.nova.destroyKey(req.params.id, function(err, key) {
+    openstack.nova.destroyKey(req.params.id, function (err, key) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -507,7 +507,7 @@ exports.removeKey = (req, res) => {
 
 
 exports.getGroups = (req, res) => {
-    openstack.nova.listGroups(function(err, groups) {
+    openstack.nova.listGroups(function (err, groups) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -517,7 +517,7 @@ exports.getGroups = (req, res) => {
 }
 
 exports.addGroup = (req, res) => {
-    openstack.nova.addGroup(req.body, function(err, group) {
+    openstack.nova.addGroup(req.body, function (err, group) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -526,7 +526,7 @@ exports.addGroup = (req, res) => {
     });
 }
 exports.addRule = (req, res) => {
-    openstack.nova.addRule(req.body, function(err, rule) {
+    openstack.nova.addRule(req.body, function (err, rule) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -541,7 +541,7 @@ exports.addRule = (req, res) => {
  */
 
 exports.getNetworks = (req, res) => {
-    openstack.neutron.getNetworks(function(err, networks) {
+    openstack.neutron.getNetworks(function (err, networks) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -552,7 +552,7 @@ exports.getNetworks = (req, res) => {
 }
 
 exports.getNetwork = (req, res) => {
-    openstack.neutron.getNetwork(req.params.id, function(err, network) {
+    openstack.neutron.getNetwork(req.params.id, function (err, network) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -564,7 +564,7 @@ exports.getNetwork = (req, res) => {
 
 exports.createNetwork = (req, res) => {
     var options = req.body;
-    openstack.neutron.createNetwork(options, function(err, network) {
+    openstack.neutron.createNetwork(options, function (err, network) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -576,7 +576,7 @@ exports.createNetwork = (req, res) => {
 
 exports.updateNetwork = (req, res) => {
     var options = req.body;
-    openstack.neutron.updateNetwork(options, function(err, network) {
+    openstack.neutron.updateNetwork(options, function (err, network) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -588,7 +588,7 @@ exports.updateNetwork = (req, res) => {
 }
 
 exports.destroyNetwork = (req, res) => {
-    openstack.neutron.destroyNetwork(req.params.id, function(err, network) {
+    openstack.neutron.destroyNetwork(req.params.id, function (err, network) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -599,7 +599,7 @@ exports.destroyNetwork = (req, res) => {
 }
 
 exports.getSubnets = (req, res) => {
-    openstack.neutron.getSubnets(function(err, subnets) {
+    openstack.neutron.getSubnets(function (err, subnets) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -610,7 +610,7 @@ exports.getSubnets = (req, res) => {
 }
 
 exports.getSubnet = (req, res) => {
-    openstack.neutron.getSubnet(req.params.id, function(err, subnet) {
+    openstack.neutron.getSubnet(req.params.id, function (err, subnet) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -622,7 +622,7 @@ exports.getSubnet = (req, res) => {
 
 exports.createSubnet = (req, res) => {
     var options = req.body;
-    openstack.neutron.createSubnet(options, function(err, subnet) {
+    openstack.neutron.createSubnet(options, function (err, subnet) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -634,7 +634,7 @@ exports.createSubnet = (req, res) => {
 
 exports.updateSubnet = (req, res) => {
     var options = req.body;
-    openstack.neutron.updateSubnet(options, function(err, subnet) {
+    openstack.neutron.updateSubnet(options, function (err, subnet) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -646,7 +646,7 @@ exports.updateSubnet = (req, res) => {
 }
 
 exports.destroySubnet = (req, res) => {
-    openstack.neutron.destroySubnet(req.params.id, function(err, subnet) {
+    openstack.neutron.destroySubnet(req.params.id, function (err, subnet) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -657,7 +657,7 @@ exports.destroySubnet = (req, res) => {
 }
 
 exports.getPorts = (req, res) => {
-    openstack.neutron.getPorts(function(err, ports) {
+    openstack.neutron.getPorts(function (err, ports) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -668,7 +668,7 @@ exports.getPorts = (req, res) => {
 }
 
 exports.getPort = (req, res) => {
-    openstack.neutron.getPort(req.params.id, function(err, port) {
+    openstack.neutron.getPort(req.params.id, function (err, port) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -680,7 +680,7 @@ exports.getPort = (req, res) => {
 
 exports.createPort = (req, res) => {
     var options = req.body;
-    openstack.neutron.createPort(options, function(err, port) {
+    openstack.neutron.createPort(options, function (err, port) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -691,7 +691,7 @@ exports.createPort = (req, res) => {
 
 exports.updatePort = (req, res) => {
     var options = req.body;
-    openstack.neutron.updatePort(options, function(err, port) {
+    openstack.neutron.updatePort(options, function (err, port) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -702,7 +702,7 @@ exports.updatePort = (req, res) => {
 }
 
 exports.destroyPort = (req, res) => {
-    openstack.neutron.destroyPort(req.params.id, function(err, port) {
+    openstack.neutron.destroyPort(req.params.id, function (err, port) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -714,7 +714,7 @@ exports.destroyPort = (req, res) => {
 
 //Security groups
 exports.getSecurityGroups = (req, res) => {
-    openstack.neutron.getSecurityGroups(function(err, securityGroups) {
+    openstack.neutron.getSecurityGroups(function (err, securityGroups) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -725,7 +725,7 @@ exports.getSecurityGroups = (req, res) => {
 }
 
 exports.getSecurityGroup = (req, res) => {
-    openstack.neutron.getSecurityGroup(req.params.id, function(err, securityGroup) {
+    openstack.neutron.getSecurityGroup(req.params.id, function (err, securityGroup) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -736,7 +736,7 @@ exports.getSecurityGroup = (req, res) => {
 
 exports.createSecurityGroup = (req, res) => {
     var options = req.body;
-    openstack.neutron.createSecurityGroup(options, function(err, securityGroup) {
+    openstack.neutron.createSecurityGroup(options, function (err, securityGroup) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -746,7 +746,7 @@ exports.createSecurityGroup = (req, res) => {
 }
 
 exports.destroySecurityGroup = (req, res) => {
-    openstack.neutron.destroySecurityGroup(req.params.id, function(err, securityGroup) {
+    openstack.neutron.destroySecurityGroup(req.params.id, function (err, securityGroup) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -758,7 +758,7 @@ exports.destroySecurityGroup = (req, res) => {
 
 //Security groups rules
 exports.getSecurityGroupRules = (req, res) => {
-    openstack.neutron.getSecurityGroupRules(function(err, rules) {
+    openstack.neutron.getSecurityGroupRules(function (err, rules) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -768,7 +768,7 @@ exports.getSecurityGroupRules = (req, res) => {
 }
 
 exports.getSecurityGroupRule = (req, res) => {
-    openstack.neutron.getSecurityGroupRule(req.params.id, function(err, rule) {
+    openstack.neutron.getSecurityGroupRule(req.params.id, function (err, rule) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -780,7 +780,7 @@ exports.getSecurityGroupRule = (req, res) => {
 
 exports.createSecurityGroupRule = (req, res) => {
     var options = req.body;
-    openstack.neutron.createSecurityGroupRule(options, function(err, rule) {
+    openstack.neutron.createSecurityGroupRule(options, function (err, rule) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -790,7 +790,7 @@ exports.createSecurityGroupRule = (req, res) => {
 }
 
 exports.destroySecurityGroupRule = (req, res) => {
-    openstack.neutron.destroySecurityGroupRule(req.params.id, function(err, rule) {
+    openstack.neutron.destroySecurityGroupRule(req.params.id, function (err, rule) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -800,7 +800,7 @@ exports.destroySecurityGroupRule = (req, res) => {
 }
 
 exports.getFloatingIps = (req, res) => {
-    openstack.nova.getFloatingIps(function(err, ipsFromOpenstack) {
+    openstack.nova.getFloatingIps(function (err, ipsFromOpenstack) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -811,7 +811,7 @@ exports.getFloatingIps = (req, res) => {
 exports.allocateNewFloatingIp = (req, res) => {
     console.log('allocate floating');
     var unused_floating_ips;
-    openstack.nova.getFloatingIps(function(err, ips) {
+    openstack.nova.getFloatingIps(function (err, ips) {
         for (i = 0; i < ips.length; i++) {
             if (!ips[i].instance_id) {
                 unused_floating_ips = ips[i];
@@ -822,7 +822,7 @@ exports.allocateNewFloatingIp = (req, res) => {
             req.ipFree = unused_floating_ips;
 
         } else {
-            openstack.nova.allocateNewFloatingIp(function(err, ip) {
+            openstack.nova.allocateNewFloatingIp(function (err, ip) {
                 if (err) {
                     res.status(err.statusCode || 500).json(err);
                     return
@@ -837,7 +837,7 @@ exports.addFloatingIp = (req, res) => {
     var server = req.body;
     var unused_floating_ips;
     console.log('addFloatingIp');
-    openstack.nova.getFloatingIps(function(err, ips) {
+    openstack.nova.getFloatingIps(function (err, ips) {
         for (var i = 0; i < ips.length; i++) {
             if (!ips[i].instance_id) {
                 unused_floating_ips = ips[i];
@@ -850,7 +850,7 @@ exports.addFloatingIp = (req, res) => {
             addToInstance(unused_floating_ips);
         } else {
             console.log('allocate before');
-            openstack.nova.allocateNewFloatingIp(function(err, ip) {
+            openstack.nova.allocateNewFloatingIp(function (err, ip) {
                 if (err) {
                     if (err.statusCode == 404) {
                         res.status(err.statusCode).json(err.result.itemNotFound.message)
@@ -866,10 +866,10 @@ exports.addFloatingIp = (req, res) => {
     });
 
     function addToInstance(ip) {
-        var interval = setInterval(function() {
+        var interval = setInterval(function () {
             if (server.status != 'PROVISIONING') {
                 clearInterval(interval);
-                openstack.nova.addFloatingIp(server.id, ip, function(err, server) {
+                openstack.nova.addFloatingIp(server.id, ip, function (err, server) {
                     if (err) {
                         res.status(err.statusCode || 500).json(err);
                         return
@@ -877,7 +877,7 @@ exports.addFloatingIp = (req, res) => {
                     res.json(ip);
                 });
             } else {
-                openstack.nova.getServer(server.id, function(err, s) {
+                openstack.nova.getServer(server.id, function (err, s) {
                     if (err) {
                         res.status(err.statusCode || 500).json(err);
                         return
@@ -894,7 +894,7 @@ exports.addFloatingIp = (req, res) => {
 exports.removeFloatingIp = (req, res) => {
     var server = req.body.server.id || req.body.server;
     var floatingIp = req.body.floatingIp.id || req.body.floatingIp;
-    openstack.nova.removeFloatingIp(server, floatingIp, function(err, s) {
+    openstack.nova.removeFloatingIp(server, floatingIp, function (err, s) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -909,7 +909,7 @@ exports.removeFloatingIp = (req, res) => {
 exports.deallocateFloatingIp = (req, res) => {
     var ip = {};
     ip.id = req.body.floatingIp;
-    openstack.nova.deallocateFloatingIp(ip, function(err, ip) {
+    openstack.nova.deallocateFloatingIp(ip, function (err, ip) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
@@ -919,12 +919,11 @@ exports.deallocateFloatingIp = (req, res) => {
 }
 
 exports.getConsole = (req, res) => {
-    
-    openstack.console.getConsole(req.params.id, function(err, console) {
+    openstack.console.getConsole(req.params.id, function (err, openstackConsole) {
         if (err) {
             res.status(err.statusCode || 500).json(err);
             return
         }
-        res.json(console);
+        res.json(openstackConsole);
     });
 }

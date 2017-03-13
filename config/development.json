@@ -1,21 +1,11 @@
 {
-  "openstack": {
-    "provider": "openstack",
-    "username": "admin",
-    "password": "adm123",
-    "region": "RegionOne",
-    "tenantName": "admin",
-    "authUrl": "http://146.134.235.201:5000"
-  },
-  "openstack-auth": {
-    "credentials": {
-      "auth": {
+    "openstack": {
+        "provider": "openstack",
+        "username": "admin",
+        "password": "adm123",
         "tenantName": "admin",
-        "passwordCredentials": {
-          "username": "admin",
-          "password": "adm123"
-        }
-      }
+        "region": "RegionOne",
+        "authUrl": "http://146.134.235.201:5000"
     }
-  }
+
 }
