@@ -5,7 +5,7 @@
         "password": "adm123",
         "tenantName": "admin",
         "region": "RegionOne",
-        "authUrl": "http://146.134.235.201:5000"
+        "authUrl": "http://192.168.122.229:5000"
     }
 
 }
